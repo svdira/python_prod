@@ -1,0 +1,25 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}{{this_series.series_title}}{% endblock %}
+
+{% block contenido %}
+<article>
+	<h4>{{this_series.cname}}<a href="#" style="text-decoration:none;">&nbsp;&#x271A;</a></h4>
+  {% if this_seasons %}
+	  <ul class="list-group">
+        {% for s in this_seasons %}
+          <li class="list-group-item">
+          {% if s.temporada.ncons > 0  %}&#9989;{%else%}&#11036;{%endif%}<a href="{% url 'show' s.temporada.id %}" style="color:black; text-decoration: none;"> {{s.temporada.show_title}} {{s.temporada.transmision}}</a>
+          </li>
+        {% endfor %}
+      </ul>
+  {% endif %}
+
+
+
+</article>
+
+<br>
+
+
+{% endblock%}

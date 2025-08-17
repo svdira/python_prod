@@ -1,0 +1,63 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}{{this_lista.listname}}{% endblock %}
+
+{% block contenido %}
+<article>
+
+    <form method="POST">
+      {% csrf_token %}
+
+     <div class="row">
+    <div class="form-group col-sm-6 col-lg-8 mb-8">
+      <label for="exampleFormControlInput1">Search book to add</label>
+      <input type = "text"  name="keyword" class="form-control" id="exampleFormControlInput1">
+    </div>
+    <div class="form-group col-sm-6 col-lg-4 mb-4">
+        <label for="exampleFormControlInput1">&nbsp;&nbsp;</label>
+      <button type="submit" class="btn btn-primary" style="width:100%">Search Book</button>
+    </div>
+    </div>
+    </form>
+
+        {% if book_s %}
+
+     {% for b in book_s %}
+          <div class="col-sm-6 col-lg-12 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><a href='{% url "addbooktolist2" b.id this_lista.id  %}' style="text-decoration: none;">{{b.titulo}}</a>
+                  <br><small class="text-muted" style="font-size: 0.7em; font-weight: normal;">{{b.wtype.category|capfirst}} | {{b.authors_links|safe}}</small></h5>
+                <p class="card-text">{{b.headtext}}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+    {% endif %}
+
+	<h4>{{this_lista.listname}} ({{this_lista.lecturas}}/{{this_lista.conteo}})</h4>
+
+	<p>{{ this_lista.date_created }}</p>
+
+
+
+
+	  <ul class="list-group">
+        {% for l in this_books %}
+          <li class="list-group-item">
+          {% if this_lista.tipo < 4 %}{% if l.bbook.last_read  %}&#9989;{%else%}&#11036;{%endif%} {% endif %}<a href="{% url 'book' l.bbook.id %}" style="color:black; text-decoration: none;">
+          &nbsp;{{l.bbook.titulo}}</a>&nbsp;{% if this_lista.tipo == 0 or this_lista.tipo == 4  %}by&nbsp;{{l.bbook.authors_links|safe}}{% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+
+
+</article>
+
+<br>
+
+
+
+
+{% endblock%}

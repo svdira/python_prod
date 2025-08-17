@@ -1,0 +1,32 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}{{this_persona.nombre}}{% endblock %}
+
+{% block contenido %}
+<article>
+
+<h4>{{this_persona.nombre}}{% if book_credits %} ({{this_persona.nreadbooks}}/{{this_persona.nbooks}}){% endif %} {% if this_persona.isauthor > 0 %}<a href="{% url 'diraAddBookAuthor' this_persona.id %}" style="text-decoration:none;">&#x271A;</a>{%endif%}</h4>
+
+  {{this_persona.info|linebreaks}}
+ 
+
+  {% if book_credits %}
+    <h4>Books</h4>
+
+      <ul class="list-group">
+        {% for c in book_credits %}
+          <li class="list-group-item">
+            {% if c.volume.consumos > 0 %}&#9989;{% else %}&#11036;{%endif%} <a href="{% url 'diraBook' c.volume.id %}" style="color:black; text-decoration: none;"> {{c.volume.titulo}} ({{c.volume.pubyear}})</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+</article>
+
+<br>
+
+
+
+
+{% endblock%}

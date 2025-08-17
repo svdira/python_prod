@@ -1,0 +1,51 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}Add New Book List{% endblock %}
+
+{% block contenido %}
+<article>
+	<h4>Add Collection</h4>
+
+	<form method="POST">
+	  {% csrf_token %}
+	  <div class="form-group">	
+	    <label for="exampleFormControlInput1">Title</label>
+	    <input type = "text" name="title" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <br>
+	  
+	  <div class="row">
+	  <div class="form-group col-sm-4">
+	    <label for="exampleFormControlInput1">Type</label>
+	    <select class="form-control" name="tipo" id="exampleFormControlSelect1">
+	    	{% for t in tipos %}
+	      		<option value = "{{t}}">{{t}}</option>
+	    	{% endfor %}
+	    </select>
+	  </div>
+	  <div class="form-group col-sm-8">
+	    <label for="exampleFormControlInput1">Author</label>
+	    <select class="form-control" name="autor" id="exampleFormControlSelect1">
+	    	{% for p in authors %}
+	      		<option value = "{{p.persona.id}}">{{p.persona.nombre}}</option>
+	    	{% endfor %}
+	    </select>
+	  </div>
+
+	</div>
+
+	  <br>
+	<div class="form-group">
+	    <label for="exampleFormControlTextarea1">Content</label>
+	    <textarea name = "info" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+	  </div>
+	  <br>
+	  <button type="submit" class="btn btn-primary">Add Collection</button>
+	</form>
+
+</article>
+
+
+
+
+{% endblock%}

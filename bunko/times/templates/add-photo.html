@@ -1,0 +1,40 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}Add New Movie{% endblock %}
+
+{% block contenido %}
+<article>
+	<h4>Add New Photo</h4>
+
+	<form method="POST" enctype="multipart/form-data">
+	  {% csrf_token %}
+	  <div class="form-group">	
+	    <label for="exampleFormControlInput1">Title</label>
+	    <input type = "text" name="title" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <br>
+	  <div class="row">
+	  <div class="form-group col-sm-6">	
+	    <label for="exampleFormControlInput1">Premiere</label>
+	    <input type = "text" name="premiere" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <div class="form-group col-sm-6">	
+	    <label for="exampleFormControlInput1">Runtime</label>
+	    <input type = "text" name="runtime" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	</div>
+	<br>
+	  <div class="form-group">
+	    <label for="exampleFormControlTextarea1">Movie Info</label>
+	    <textarea name = "info" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+	  </div>
+	  <br>
+	  <button type="submit" class="btn btn-primary">Add Photo</button>
+	</form>
+
+</article>
+
+
+
+
+{% endblock%}

@@ -1,0 +1,43 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}Add New Entity{% endblock %}
+
+{% block contenido %}
+<article>
+	<h4>Add New Entity to {{this_book.titulo}}</h4>
+
+	<form method="POST">
+	  {% csrf_token %}
+	  <div class="form-group">
+	    <label for="exampleFormControlInput1">Name</label>
+	    <input type = "text" name="nombre" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <br>
+	  <div class="form-group">
+	    <label for="exampleFormControlSelect1">Type</label>
+	    <select class="form-control" name="etype" id="exampleFormControlSelect1">
+	    	{% for w in wtypes %}
+	      		<option value = "{{w}}">{{w}}</option>
+	    	{% endfor %}
+	    </select>
+	  </div>
+	  <br>
+	  <div class="form-group">
+	    <label for="exampleFormControlTextarea1">Content</label>
+	    <textarea name = "info" class="form-control" id="exampleFormControlTextarea1" rows="12"></textarea>
+	  </div>
+	   <br>
+	   <div class="form-group">
+	    <label for="exampleFormControlInput1">Importancia</label>
+	    <input type = "text" name="importancia" value="50" width="25" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <br>
+	  <button type="submit" class="btn btn-primary">Add Entity</button>
+	</form>
+
+</article>
+
+
+
+
+{% endblock%}

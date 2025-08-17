@@ -1,0 +1,41 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}{{this_book.titulo}} ({{this_book.pubyear}}){% endblock %}
+
+{% block contenido %}
+<article>
+
+<h4>{%if this_book.now_reading > 0%}&#x23F3;{%endif%}{%if this_book.consumos > 0%}&#9989;{%endif%}{{this_book.titulo}} ({{this_book.pubyear}})<br><small class="text-muted" style="font-size: 0.7em; font-weight: normal;">{{this_book.tipo|capfirst}} | {{this_book.credit_links|safe}} {% if this_book.legacy == False  %}| <a href="{% url 'diraAddLegacyBook' this_book.id %}" style="text-decoration: none; color:gray;">Legacy</a>{% endif %} | <a href="{% url 'diraEditBook' this_book.id %}" style="text-decoration: none; color:gray;">Edit</a> {%if this_book.now_reading == 0%}| <a href="{% url 'diraStartRead' this_book.id %}" style="text-decoration: none; color:gray;">Start</a>{%else%}| <a href="{% url 'diraFinishRead' this_book.id %}" style="text-decoration: none; color:gray;">Finish</a>{%endif%}
+| <a href="{% url 'diraAddBookPage' this_book.id %}" style="text-decoration: none; color:gray;">Add Page</a>
+
+</small> <br>
+ </h4>
+  {% if btags %}<p>{% for t in btags %}<a href="#"><span class="badge text-bg-secondary">{{t.tag}}</span></a>&nbsp;{% endfor %}</p> {%endif%}
+
+    {% if this_book.cover %}<img src="{{this_book.cover.url}}" style="border:1px solid grey; float:left; width:40%; margin-right: 16px; margin-bottom: 16px;">{% endif %}
+
+  {{this_book.mdOutput|safe}}
+
+  <div style="clear:both;"></div>
+
+  {% if paginas%}
+  <hr>
+  {% for p in paginas %}
+    <h5><a href="{% url 'diraEditBookPage' p.id %}" style="text-decoration: none;">{{p.titulo}}</a></h5>
+    {{p.mdOutput|safe}}
+  {% endfor %}
+  {% endif %}
+
+
+
+
+
+
+</article>
+
+<br>
+
+
+
+
+{% endblock%}

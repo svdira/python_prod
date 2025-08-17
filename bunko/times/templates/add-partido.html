@@ -1,0 +1,98 @@
+{% extends 'base_soccer.html' %}
+
+{% block titulo %}Add New Match{% endblock %}
+
+{% block contenido %}
+
+<article>
+    <h4>Add New Item</h4>
+     <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Date</label>
+        <input type="text" name="fecha" value="{{last_m.fecha|safe}}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      </div>
+      <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Phase</label>
+          <input type="text" name="fase" value='{{last_m.fase}}' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+      <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Local Team</label>
+          <select class="form-select mb-3" name="local">
+            {% for e in equipos %}
+                <option value="{{e.equipoRel.id}}">{{e.equipoRel.nombre}}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+         <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Visit Team</label>
+          <select class="form-select mb-3" name="visit">
+            {% for e in equipos %}
+                <option value="{{e.equipoRel.id}}">{{e.equipoRel.nombre}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Match</button>
+    </form>
+
+    <hr>
+     {% if lm %}
+        {% for m in lm %}
+
+        <div class="col">
+            <div class="card">
+              <div class="card-header">
+                {{m.liga.nombre}} | {{m.fecha}}
+              </div>
+              <div class="card-body">
+                <div style="width:40%; height:30px; float: left;">
+                    <img src="{{ m.local.logo.url }}" style="height: 30px;">
+                    <div style="float:right;"><h5><a href="{% url 'sccteam' m.local.id %}" style="color: black;text-decoration: none;">{{ m.local.nombre }}</a></h5></div>
+                </div>
+                <div style="width:20%; height:30px;  float: left; text-align: center; color:blue;"><h5>
+                {% if m.terminado == True %}
+                {{m.marcador}}
+                {% else %}
+                &nbsp;-&nbsp;
+                {% endif%}
+            </h5>
+                </div>
+                <div style="width:40%; height:30px;  float: left;">
+                    <div style="float:left;"><h5><a href="{% url 'sccteam' m.visita.id %}" style="color: black;text-decoration: none;">{{ m.visita.nombre }}</a></h5></div>
+                    <img src="{{ m.visita.logo.url }}"  style="height: 30px; float:right;">
+                </div>
+
+              </div>
+              <div class="card-footer text-muted">
+                {{m.fase}} | <a href="{% url 'viewmatch' m.id %}">view</a>
+
+              </div>
+
+            </div>
+
+        </div>
+        <br>
+
+        {% endfor %}
+    {% endif %}
+</article>
+
+
+{% endblock %}
+
+
+{% block rightbar %}
+<br><br>
+<h4>Leagues</h4>
+      <ul class="list-group">
+
+        {% for l in ligas %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+          <a href="{% url 'viewliga' 1 l.id %}" style="color:black; text-decoration: none;"> {{l.nombre}}</a>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <br><br>
+      {% endblock %}

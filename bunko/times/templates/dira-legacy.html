@@ -1,0 +1,25 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}Book History{% endblock %}
+
+{% block contenido %}
+
+<article>
+		<h4>Dira Library Legacy Reads ({{conteo}})</h4>
+
+	  <ul class="list-group" reversed>
+        {% for r in reads %}
+          <li class="list-group-item">
+          <a href="{% url 'diraBook' r.id %}" style="color:black; text-decoration: none;">{{r.titulo}} ({{r.pubyear}})</a><br>by {{r.credit_links|safe}}
+          </li>
+        {% endfor %}
+      </ul>
+
+
+</article>
+<br>
+
+
+{% endblock%}
+
+

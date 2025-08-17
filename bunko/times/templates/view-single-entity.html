@@ -1,0 +1,139 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}{{this_entity.nombre}}{% endblock %}
+
+{% block contenido %}
+
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Info</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Edit</button>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+  	<br>
+  	<article class="blog-post">
+	<h4>{{this_entity.nombre}} <br><small class="text-muted" style="font-size: 0.7em; font-weight: normal;">{{this_entity.etype|capfirst}} {{this_entity.afiliations|safe}}</small></h4>
+
+	{{this_entity.mdOutput|safe}}
+
+
+  {% if entidades %}
+  <hr>
+
+<h5>More Entities</h5>
+
+<ul class="list-group">
+{% for e in entidades %}
+  <li class="list-group-item">
+        <a href="{% url 'viewentity' e.id %}" style="color:black; text-decoration: none;"> <b>{{e.nombre}}:</b> </a>{{e.headtext}}    
+    </li>     
+   {% endfor %}
+  </ul>
+
+{%endif%}
+<br>
+
+	<p>Back to:
+    {% if otros_libros %}
+    {% for b in otros_libros %}
+    <br> <a href="{% url 'book' b.id %}" style="text-decoration:none;">{{b.titulo}} </a>
+    {% endfor %}
+    {% endif %}
+
+	<div style="clear:both;"></div>
+
+
+
+
+
+</article>
+  </div>
+</div>
+  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+  	<br>
+
+  	<h5>Edit {{this_entity.nombre}}</h5>
+
+	<form method="POST">
+      {% csrf_token %}
+    <div class="form-group">
+
+	    <textarea name = "info" class="form-control" id="exampleFormControlTextarea1" rows="12">{{this_entity.info}}</textarea>
+	  </div>
+
+    <div class="form-group">
+      <label for="exampleFormControlInput1">Importancia</label>
+      <input type = "text" name="importancia" value="{{this_entity.importancia}}" width="25" class="form-control" id="exampleFormControlInput1">
+    </div>
+
+    <div class="form-group col-sm-6 col-lg-3 mb-3">
+        <label for="exampleFormControlInput1">&nbsp;&nbsp;</label>
+	    <button type="submit" class="btn btn-primary" style="width:100%">Save Changes</button>
+	  </div>
+
+    </form>
+    <br>
+
+  <hr>
+
+    <h5>Add to group</h5>
+    <form method="POST" action="{% url 'addEntityToGroup' %}">
+      {% csrf_token %}
+
+     <div class="form-group">
+      <label for="exampleFormControlSelect1">Group</label>
+      <select class="form-control" name="cat_id" id="exampleFormControlSelect1">
+        {% for e in ent_groups %}
+            <option value = "{{e.id}}">{{e.groupname}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <br>
+   <input type="hidden" name="entity_id" value="{{this_entity.id}}">
+    <div class="form-group col-sm-6 col-lg-3 mb-3">
+      <button type="submit" class="btn btn-primary" style="width:100%">Add to group</button>
+    </div>
+    </form>
+    <br>
+
+
+    <hr>
+
+    <h5>Add New Group</h5>
+
+  <form method="POST" action="{% url 'createEntityGroup' %}">
+      {% csrf_token %}
+      <div class="form-group">
+      <label for="exampleFormControlInput1">Group Name</label>
+      <input type = "text" name="nombre"  class="form-control" id="exampleFormControlInput1">
+    </div>
+    <br>
+      <div class="form-group">
+
+      <textarea name = "info" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+    </div>
+
+    
+    <input type="hidden" name="entity_id" value="{{this_entity.id}}">
+
+    <div class="form-group col-sm-6 col-lg-3 mb-3">
+        <label for="exampleFormControlInput1">&nbsp;&nbsp;</label>
+      <button type="submit" class="btn btn-primary" style="width:100%">Save Changes</button>
+    </div>
+
+    </form>
+  </div>
+
+
+
+
+
+
+{% endblock%}
+
+

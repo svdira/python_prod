@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Add New Item{% endblock %}
+
+{% block contenido %}
+
+<article>
+    <h4>Add New Player to {{equipo.nombre}}</h4>
+     <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Player Name</label>
+        <input type="text" name="nombre" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      </div>
+      <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label" >Country</label>
+          <input type="text" name="pais" class="form-control" value="TBA" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label"> Number</label>
+          <input type="text" name="number" class="form-control" value="0" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+
+         <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Position</label>
+           <select class="form-select mb-3" name="position">
+              {% for l in listado %}
+                  <option value="{{l}}" {% if l == 'Not Specified' %}selected{%endif%}>{{l}}</option>
+              {% endfor %} 
+            </select>
+        </div>
+
+        <div class="mb-3 col-md-5" style="float: left; margin-right:2.5em;">
+          <label for="exampleInputEmail1" class="form-label">Minuto</label>
+          <input type="text"  name="minuto" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      </div>
+
+      <div class="mb-3 col-md-5" style="float: left;">
+          <label for="exampleInputEmail1" class="form-label">Adicional</label>
+          <input type="text"  value="0" name="adicional" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      </div>
+
+      <div style="clear: both;"></div>
+
+      <div class="mb-3 form-check">
+          <input type="checkbox" name="penal" class="form-check-input" id="exampleCheck1">
+          <label class="form-check-label" for="exampleCheck1">Penalty</label>
+      </div>
+
+      <div class="mb-3 form-check">
+          <input type="checkbox" name="autogol" class="form-check-input" id="exampleCheck1">
+          <label class="form-check-label" for="exampleCheck1">Own Goal</label>
+      </div>
+
+        
+
+        <input type="hidden" name="equipo" value="{{partido.visita.id}}">
+        <input type="hidden" name="partido" value="{{partido.id}}">
+
+
+        <button type="submit" class="btn btn-primary">Save Goal</button>
+      </form>
+
+
+{% endblock %}

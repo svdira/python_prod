@@ -1,0 +1,28 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}Watched Shows{% endblock %}
+
+{% block contenido %}
+<article>
+	<h4>Show History</h4>
+
+	   <ul class="list-group">
+        {% for a in watchedshows %}
+      
+          <li class="list-group-item">
+          <a href="{% url 'show' a.show.id %}" style="color:black; text-decoration: none;">  {{a.show.show_title}} {{a.show.transmision}}</a>
+          <br><span style="color: grey;">{{a.fec_ini}} to {{a.fec_fin}}</span>
+                    
+          </li>
+        
+        {% endfor %}
+      </ul>
+
+
+
+</article>
+
+<br>
+
+
+{% endblock%}

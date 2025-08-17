@@ -1,0 +1,34 @@
+{% extends 'base_mono.html' %}
+{% load static %}
+
+{% block titulo %}The Times | Book History{% endblock %}
+
+{% block contenido %}
+
+
+
+<script src="{% static 'js/masonry.pkgd.min.js' %}" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
+
+
+     <div class="row" data-masonry='{"percentPosition": true }'>
+        {% for a in rhist %}
+        <div class="col-sm-6 col-lg-3 mb-3">
+              <div class="card">
+
+                <div class="card-body">
+
+                  <h5 class="card-title"><a href='{% url "book" a.volume.id  %}' style="text-decoration: none;">{{a.volume.titulo}}</a>
+                    <br><small class="text-muted" style="font-size: 0.7em;  font-weight: normal;">{{a.finish_d}} | {{a.volume.authors_links|safe}}</small></h5>
+
+                  <p class="card-text">{{a.volume.headtext}}</p>
+
+                </div>
+              </div>
+               </div>
+        {% endfor %}
+      </div>
+
+
+
+
+{% endblock%}

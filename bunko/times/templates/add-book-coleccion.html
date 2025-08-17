@@ -1,0 +1,40 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}Add New Book Colection{% endblock %}
+
+{% block contenido %}
+<article>
+	<h4>Add Book Collection</h4>
+
+	<form method="POST">
+	  {% csrf_token %}
+	  <div class="form-group">
+	    <label for="exampleFormControlInput1">Title</label>
+	    <input type = "text" name="title" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <br>
+	  <div class="form-group">
+	    <label for="exampleFormControlSelect1">Type</label>
+	    <select class="form-control" name="tipo" id="exampleFormControlSelect1">
+	    	<option value = "0">To Read Books</option>
+	    	<option value = "1">Manga Series</option>
+	    	<option value = "3">Light Novel Series</option>
+	    	<option value = "2">Book Series</option>
+	    	<option value = "4">Legacy</option>
+	    </select>
+	  </div>
+	  <br>
+	  <div class="form-group">
+	    <label for="exampleFormControlTextarea1">Content</label>
+	    <textarea name = "info" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+	  </div>
+	  <br>
+	  <button type="submit" class="btn btn-primary">Add Collection</button>
+	</form>
+
+</article>
+
+
+
+
+{% endblock%}

@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block titulo %}Dira, Inc. Finance Reports{% endblock %}
+
+{% block contenido %}
+
+<article>
+
+<h4>Budget Excution Year: {{anho}} Month: {{mes}}</h4>
+
+<p style="font-size:1.5em; color:{{colp}};">{{actual|floatformat:"2"|intcomma}}/{{budget|floatformat:"2"|intcomma}} [{{perf|floatformat:"2"|intcomma}}%]
+
+{% if be %}
+      <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col">Account</th>
+            <th scope="col">Budget</th>
+            <th scope="col">Actual</th>
+            <th scope="col">Var $</th>
+            <th scope="col">Var %</th>
+          </tr>
+          </thead>
+          <tbody>
+            {% for b in be %}
+                <tr>
+                    <td>{{b.cuenta}}</td>
+                    <td style="text-align:right;">{{b.mbudget|floatformat:"2"|intcomma}}</td>
+                    <td style="text-align:right;">{{b.actual|floatformat:"2"|intcomma}}</td>
+                    {%if b.pvar < -1.5 and b.mbudget > 0 %}
+                    <td style="text-align:right; color:green;">{{b.bvar|floatformat:"2"|intcomma}}</td>
+                    <td style="text-align:right; color:green;">{{b.pvar|floatformat:"2"|intcomma}}</td>
+                    {%elif b.pvar < 1.5 and b.mbudget > 0 %}
+                    <td style="text-align:right; color:orange;">{{b.bvar|floatformat:"2"|intcomma}}</td>
+                    <td style="text-align:right; color:orange;">{{b.pvar|floatformat:"2"|intcomma}}</td>
+                    {%else%}
+                    <td style="text-align:right; color:red;">{{b.bvar|floatformat:"2"|intcomma}}</td>
+                    <td style="text-align:right; color:red;">{{b.pvar|floatformat:"2"|intcomma}}</td>
+                    {%endif%}
+
+                </tr>
+            {% endfor %}
+
+          </tbody>
+        </table>
+{%endif%}
+
+
+    <h4>Moviemientos</h4>
+      <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col">Fecha</th>
+            <th scope="col">Monto</th>
+            <th scope="col">Destino</th>
+            <th scope="col">Cuenta</th>
+            <th scope="col">Descripcion</th>
+          </tr>
+          </thead>
+          <tbody>
+            {% for tx in trxs%}
+                <tr>
+                    <td>{{tx.fecha}}</td>
+                    <td style="text-align:right;">{{tx.monto}}</td>
+                    <td>{{tx.credito.desc}}</td>
+                    <td>{{tx.debito.nombre}}</td>
+                    <td>{{tx.desc}}</td>
+                </tr>
+            {% endfor %}
+
+          </tbody>
+        </table>
+</article>
+
+
+{% endblock %}
+
+{% block rightbar %}
+  <br><br>
+    <h4>Add Budget</h4>
+    <form method="POST" enctype="multipart/form-data" action="{% url 'addBudget' %}">
+        {% csrf_token %}
+        <input type="hidden" name="y" value="{{anho}}">
+        <input type="hidden" name="m" value="{{mes}}">
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Cuenta</label>
+          <select class="form-select mb-3" name="cuenta">
+            {% for e in categ %}
+                <option value="{{e.id}}">{{e.desc}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Monto</label>
+        <input type="text" name="mbudget"  class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      </div>
+      <button type="submit" class="btn btn-primary">Add Budget</button>
+    </form>
+<br><br>
+
+
+    <h4>Cortes</h4>
+      <ul class="list-group">
+        {% for c in cortes %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <a href="{% url 'viewmonth' c.fecha__year c.fecha__month %}" style="color:black; text-decoration: none;"> {{c.fecha__year}}-{{ c.fecha__month}}</a>
+          </li>
+        {% endfor %}
+      </ul>
+{% endblock %}

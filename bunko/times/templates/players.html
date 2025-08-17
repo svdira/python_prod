@@ -1,0 +1,51 @@
+{% extends 'base_soccer.html' %}
+{% load humanize %}
+
+{% block titulo %}Players | Futbol{% endblock %}
+
+{% block contenido %}
+
+<article>
+
+ 
+    <h4>Players</h4>
+      <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Country</th>
+          </tr>
+          </thead>
+          <tbody>
+            {% for j in jugadores%}
+                <tr>
+                    
+                    <td><a href="{% url 'jugador' j.id %}" style="text-decoration:none;">{{j.nombre}}</a></td>
+                    <td>{{j.pais}}</td>
+                </tr>
+            {% endfor %}
+        
+          </tbody>
+        </table>
+</article>
+
+
+{% endblock %}
+
+{% block rightbar %}
+<h4>Add Player</h4>
+<form method="POST">
+  {% csrf_token %}
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Name</label>
+        <input type="text" name="nombre" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      </div>
+
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Country</label>
+        <input type="text" name="pais" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      </div>
+       
+      <button type="submit" class="btn btn-primary">Add Player</button>
+    </form>
+{% endblock %}

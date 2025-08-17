@@ -1,0 +1,39 @@
+{% extends 'base_listing.html' %}
+
+{% block titulo %}Book History{% endblock %}
+
+{% block contenido %}
+
+<article>
+		<h4>Entries with #{{this_etiqueta}} in {{anho}}</h4>
+
+	  <ul class="list-group" reversed>
+        {% for a in posts %}
+          <li class="list-group-item">
+          	<span style="color:grey;"><i>{{a.tweet.created_at|date:"N j"}}</span> <a href="#" style='color:white;' onmouseover="this.style.color='blue';" onmouseout="this.style.color='white';">#{{a.tweet.id}}</a></i><br>
+            {{a.tweet.cleantext|safe}} {{a.hashtags|safe}}
+          </li>
+        {% endfor %}
+      </ul>
+
+
+</article>
+<br>
+
+
+{% endblock%}
+
+
+
+{% block rightbar %}
+<br>
+
+<h4>History</h4>
+      <ul class="list-group">
+        {% for d in anhos %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+          <a href="{% url 'etiqueta' d.tweet__created_at__year this_etiqueta %}" style="color:black; text-decoration: none;"> {{d.tweet__created_at__year}} ({{d.qitems}})</a>
+          </li>
+        {% endfor %}
+      </ul>
+{% endblock %}

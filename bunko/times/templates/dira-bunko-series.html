@@ -1,0 +1,25 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}{{this_series.series_title}}{% endblock %}
+
+{% block contenido %}
+<article>
+	<h4>{{this_series.series_title}}<a href="{% url 'diraAddBunkoVolume' this_series.id %}" style="text-decoration:none;">&nbsp;&#x271A;</a></h4>
+  {% if this_volumes %}
+	  <ul class="list-group">
+        {% for v in this_volumes %}
+          <li class="list-group-item">
+          {% if v.read == True  %}&#9989;{%else%}&#11036;{%endif%}<a href="{% url 'diraBunkoVolume' v.id %}" style="color:black; text-decoration: none;"> {{v.titulo}}</a>
+          </li>
+        {% endfor %}
+      </ul>
+  {% endif %}
+
+
+
+</article>
+
+<br>
+
+
+{% endblock%}

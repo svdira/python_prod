@@ -1,0 +1,78 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}Add New Book{% endblock %}
+
+{% block contenido %}
+<article>
+	<h4>Add New Book</h4>
+
+	<form method="POST" enctype="multipart/form-data">
+	  {% csrf_token %}
+	  <div class="form-group">
+	    <label for="exampleFormControlInput1">Title</label>
+	    <input type = "text" name="title"  class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <br>
+	  <div class="row">
+	  <div class="form-group col-sm-4">
+	    <label for="exampleFormControlInput1">Pub year</label>
+	    <input type = "text" name="pub_year" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <div class="form-group col-sm-4">
+	    <label for="exampleFormControlInput1">Orig Lan</label>
+	    <input type = "text" name="orig_lan" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <div class="form-group col-sm-4">
+	    <label for="exampleFormControlSelect1">Type</label>
+	    <select class="form-control" name="btype" id="exampleFormControlSelect1">
+	    	{% for p in booktypes %}
+	      		<option value = "{{p.id}}">{{p.category|capfirst}}</option>
+	    	{% endfor %}
+	    </select>
+	  </div>
+	</div>
+	  <br>
+	  <div class="form-group">
+	    <label for="exampleFormControlSelect1">Author</label>
+	    <select class="form-control" name="autor" id="exampleFormControlSelect1">
+	    	{% for p in personas %}
+	      		<option value = "{{p.id}}">{{p.title}}</option>
+	    	{% endfor %}
+	    </select>
+	  </div>
+	  <br>
+	  <div class="form-group">
+	    <label for="exampleFormControlTextarea1">Book Info</label>
+	    <textarea name = "info" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+	  </div>
+	  <br>
+	  <div class="form-group">
+	    <label for="exampleFormControlInput1">Tags</label>
+	    <input type = "text" name="tags" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <br>
+	  <div class="form-group">
+	    <label for="exampleFormControlSelect1">List or Series</label>
+	    <select class="form-control" name="lista_id" id="exampleFormControlSelect1">
+	    	<option value="0">None</option>
+	    	{% for w in listas %}
+	      		<option value = "{{w.id}}">{{w.listname}}</option>
+	    	{% endfor %}
+	    </select>
+	  </div>
+	  <br>
+
+	  <div class="form-group">
+    	<label for="exampleFormControlFile1">Book Cover</label>
+    	<input type="file" name = "imagen" class="form-control-file" id="exampleFormControlFile1">
+  	</div>
+  	<br>
+	  <button type="submit" class="btn btn-primary">Add Book</button>
+	</form>
+
+</article>
+
+
+
+
+{% endblock%}

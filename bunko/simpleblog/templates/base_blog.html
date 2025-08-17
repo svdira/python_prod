@@ -1,0 +1,313 @@
+{% load static%}
+<!doctype html>
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.98.0">
+    <link href="{% static 'css/dira_style.css' %}" rel="stylesheet">
+
+    <title>{% block titulo %}The Asteroid B612 Times{% endblock %}</title>
+
+
+<style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        width: 100%;
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .btn-bd-primary {
+        --bd-violet-bg: #712cf9;
+        --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+        --bs-btn-font-weight: 600;
+        --bs-btn-color: var(--bs-white);
+        --bs-btn-bg: var(--bd-violet-bg);
+        --bs-btn-border-color: var(--bd-violet-bg);
+        --bs-btn-hover-color: var(--bs-white);
+        --bs-btn-hover-bg: #6528e0;
+        --bs-btn-hover-border-color: #6528e0;
+        --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+        --bs-btn-active-color: var(--bs-btn-hover-color);
+        --bs-btn-active-bg: #5a23c8;
+        --bs-btn-active-border-color: #5a23c8;
+      }
+
+      .bd-mode-toggle {
+        z-index: 1500;
+      }
+
+      .bd-mode-toggle .dropdown-menu .active .bi {
+        display: block !important;
+      }
+    </style>
+
+
+
+
+<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .xpbadge {
+          background-color: #17a2b8;
+          color: white;
+          padding: 4px 8px;
+          text-align: center;
+          border-radius: 5px;
+        }
+      </style>
+
+
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/sticky-footer-navbar.css' %}" rel="stylesheet">
+     <!-- Custom styles for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Playfair&#43;Display:700,900&amp;display=swap" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/blog.css' %}" rel="stylesheet">
+
+
+  </head>
+  <body class="d-flex flex-column h-100">
+
+<header>
+  <!-- Fixed navbar -->
+  <nav class="navbar navbar-expand-md fixed-top" style="background-color: #e3f2fd;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'inicio' %}">Simple Blog</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/"></a>
+          </li>
+
+           <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Reports
+              </a>
+
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="{% url 'readingHist' %}">Reading History</a></li>
+    
+              </ul>
+            </li>
+
+             <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Tools
+              </a>
+
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/addtimesmedia" target="_blank">Add Media</a></li>
+                <li><a class="dropdown-item" href="/mediapage/0"  target="_blank">Media Page</a></li>
+           
+            </li>
+              </ul>
+            </li>
+             <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Movies
+              </a>
+
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                <li><a class="dropdown-item" href="#">History</a></li>
+                <li><a class="dropdown-item" href="#">Queue</a></li>
+                <li><a class="dropdown-item" href="#">Lists</a></li>
+              </ul>
+            </li>
+
+             <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Shows
+              </a>
+
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                <li><a class="dropdown-item" href="#">History</a></li>
+                <li><a class="dropdown-item" href="#">Queue</a></li>
+
+              </ul>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'adminPaginas' %}"  role="button"  aria-expanded="false">
+                Admin
+              </a>
+            </li>
+
+
+
+
+
+         </ul>
+        <form class="d-flex" role="search"  method="post">
+          {% csrf_token %}
+          <input class="form-control me-2" type="search" name="kw" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- Begin page content -->
+<main class="flex-shrink-0">
+  <div class="container">
+    <div class="row justify-content-center">
+            <div class="col-sm-6"><br>
+      {% block contenido %}
+      <h2>Coronel Gabriel García Márquez</h2>
+      <p>El coronel no tiene quien le escriba es una novela corta publicada por el escritor colombiano Gabriel García Márquez en 1961. Es una de las más célebres de las escritas por el autor, y su protagonista, un viejo coronel que espera la pensión que nunca llega, es considerado como uno de los personajes más entrañables de la literatura hispanoamericana del siglo XX. Fue incluida en la lista de las 100 mejores novelas en español del siglo XX del periódico español El Mundo.1​
+
+<p>El propio García Márquez reconoció tras escribirla que era la más simple de las novelas que había escrito hasta la fecha. En ella no se detectan muchas de las facetas características de este autor, como son los frecuentes saltos en la trama, la combinación entre fenómenos fantásticos y situaciones reales, y algunos otros detalles que suelen resaltar en la lectura. La novela pretende reflejar el sentimiento de desasosiego ante la espera, tal y como el autor lo expresó.
+
+<p>García Márquez lo consideró su mejor libro: "Yo creo que es mi mejor libro, sin lugar a dudas. Además, y esto no es una boutade, tuve que escribir Cien años de soledad para que leyeran El coronel no tiene quien le escriba."2​
+
+<p>Muchos años después de publicarse la novela, en 1999, el director mexicano Arturo Ripstein llevó al cine la obra, con el mismo título que el original.3​ También fue adaptada al teatro en varias ocasiones como en 1989 dirigida por Carlos Giménez o en 2019 dirigida por Carlos Saura y protagonizada por Imanol Arias.
+
+  <article class="blog-post">
+        <h2 class="blog-post-title mb-1">Sample blog post</h2>
+        <p class="blog-post-meta">January 1, 2021 by <a href="#">Mark</a></p>
+
+        <p>This blog post shows a few different types of content that’s supported and styled with Bootstrap. Basic typography, lists, tables, images, code, and more are all supported as expected.</p>
+        <hr>
+        <p>This is some additional paragraph placeholder content. It has been written to fill the available space and show how a longer snippet of text affects the surrounding content. We'll repeat it often to keep the demonstration flowing, so be on the lookout for this exact same string of text.</p>
+        <h2>Blockquotes</h2>
+        <p>This is an example blockquote in action:</p>
+        <blockquote class="blockquote">
+          <p>Quoted text goes here.</p>
+        </blockquote>
+
+      </article>
+    </div>
+    {% endblock %}
+  </div>
+
+
+  <div class="col-sm-4">
+    {% block rightbar %}
+    {% endblock %}
+  </div>
+
+
+
+  </div>
+</main>
+
+<footer class="footer mt-auto py-3 bg-light">
+  <div class="container">
+    <span class="text-muted">&copy;Dira, Inc.</span>
+  </div>
+</footer>
+
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+
+  </body>
+</html>

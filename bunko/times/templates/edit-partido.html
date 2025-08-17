@@ -1,0 +1,43 @@
+{% extends 'base_soccer.html' %}
+
+{% block titulo %}Edit Match{% endblock %}
+
+{% block contenido %}
+
+<article>
+    <h4>Edit: {{ thisMatch.local.nombre }} v {{thisMatch.visita.nombre}} </h4>
+     <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Date</label>
+        <input type="text" name="fecha" value="{{thisMatch.fecha|safe}}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      </div>
+      <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Phase</label>
+          <input type="text" name="fase" value='{{thisMatch.fase}}' class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+      <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Local Team</label>
+          <select class="form-select mb-3" name="local">
+            {% for e in equipos %}
+
+                <option value="{{e.equipoRel.id}}" {% if thisMatch.local.id == e.equipoRel.id %}selected{% endif %}>{{e.equipoRel.nombre}}</option>
+
+            {% endfor %}
+          </select>
+        </div>
+
+         <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Visit Team</label>
+          <select class="form-select mb-3" name="visit">
+            {% for e in equipos %}
+                <option value="{{e.equipoRel.id}}" {% if thisMatch.visita.id == e.equipoRel.id %}selected{% endif %}>{{e.equipoRel.nombre}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</article>
+
+
+{% endblock %}

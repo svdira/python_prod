@@ -1,0 +1,36 @@
+{% extends 'base_listing.html' %}
+
+{% block titulo %}{{this_grupo.groupname}}{% endblock %}
+
+{% block contenido %}
+
+
+<h5>{{this_grupo.groupname}}</h5>
+
+
+{% for  e in this_entidades %}
+
+<h6><a href="{% url 'viewentity' e.entity.id %}" style="text-decoration: none;">{{e.entity.nombre}}</a></h6>
+{{e.entity.info}}
+<hr>
+
+{% endfor %}
+
+
+
+
+{% endblock%}
+
+
+
+{% block rightbar %}
+<br>
+<h5>Entity Groups </h5>
+      <ul class="list-group">
+        {% for e in all_grupos %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+          <a href="{% url 'viewEntityGroup' e.id %}" style="color:black; text-decoration: none;"> {{e.groupname}}</a>
+          </li>
+        {% endfor %}
+      </ul>
+{% endblock %}

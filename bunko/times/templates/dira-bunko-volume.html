@@ -1,0 +1,44 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}{{this_volume.com_titulo}}{% endblock %}
+
+{% block contenido %}
+<article>
+
+<h4>{% if this_volume.read == True  %}&#9989;{%else%}&#11036;{%endif%}{{this_volume.com_titulo}}<br><small class="text-muted" style="font-size: 0.7em; font-weight: normal;"><a href="{% url 'diraReadVolume' this_volume.id %}" style="text-decoration:none; color:grey;">Read</a> | <a href="{% url 'diraBunkoSeries' this_volume.series.id %}" style="text-decoration:none; color:grey;">Series</a> | <a href="{% url 'diraAddBunkoPage' this_volume.id %}" style="text-decoration:none; color:grey;">Add Page</a></small></h4>
+
+ 
+  {{this_volume.mdOutput|safe}}
+
+  <div style="clear:both;"></div>
+
+  {% if paginas%}
+  <hr>
+  {% for p in paginas %}
+    <h5><a href="{% url 'diraEditBunkoPage' p.id %}" style="text-decoration: none;">{{p.page_title}}</a></h5>
+    {{p.mdOutput|safe}}
+  {% endfor %}
+  {% endif %}
+
+
+  {% if wikipages%}
+  <hr>
+  {% for p in wikipages %}
+    <h5><a href="{% url 'diraEditBunkoPage' p.id %}" style="text-decoration: none;">{{p.page_title}}</a></h5>
+    {{p.mdOutput|safe}}
+  {% endfor %}
+  {% endif %}
+
+
+
+
+
+
+</article>
+
+<br>
+
+
+
+
+{% endblock%}

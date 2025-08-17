@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Match Activity{% endblock %}
+
+{% block contenido %}
+
+
+
+ <article class="my-3" id="card">
+     <h4>{{thisLiga.nombre}} |  <a href="{% url 'viewliga' 1 thisLiga.id %}" style="text-decoration: none;">Matches</a></h4>
+
+    {% if tipo == 'liga' %}
+    <table class="table table-striped" style=" width:auto;">
+          <thead>
+          <tr>
+            <th scope="col">Equipo</th>
+            <th scope="col">Pts</th>
+            <th scope="col">PJ</th>
+            <th scope="col">PG</th>
+            <th scope="col">PE</th>
+            <th scope="col">PP</th>
+
+            <th scope="col">GF</th>
+            <th scope="col">GC</th>
+            <th scope="col">DG</th>
+          </tr>
+          </thead>
+          <tbody>
+            {% for f in tp %}
+                <tr>
+                    <td><a href="{% url 'sccteam' f.equipo_id %}" style="text-decoration:none;">{{f.equipo}}</a></td>
+                    <td>{{f.ptos}}</td>
+                    <td>{{f.pj}}</td>
+                    <td>{{f.pg}}</td>
+                    <td>{{f.pe}}</td>
+                    <td>{{f.pp}}</td>
+
+                    <td>{{f.gf}}</td>
+                    <td>{{f.gc}}</td>
+                    <td>{{f.dg}}</td>
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+    {% elif tipo == 'grupos' %}
+
+
+        {% if partidos %}
+        <br>
+        <hr>
+        <br>
+        <h4 style="font-family: sans-serif;">Elimination Round</h4>
+
+{% for m in partidos %}
+
+        <div class="col">
+            <div class="card">
+              <div class="card-header">
+                {{m.liga.nombre}} | {{m.fecha}}
+              </div>
+              <div class="card-body">
+                <div style="width:40%; height:30px; float: left;">
+                    <img src="{{ m.local.logo.url }}" style="height: 30px;">
+                    <div style="float:right;"><h5><a href="{% url 'sccteam' m.local.id %}" style="color: black;text-decoration: none;">{{ m.local.nombre }}</a></h5></div>
+                </div>
+                <div style="width:20%; height:30px;  float: left; text-align: center; color:blue;"><h5>
+                {% if m.terminado == True %}
+                {{m.marcador}}
+                {% else %}
+                &nbsp;-&nbsp;
+                {% endif%}
+            </h5>
+                </div>
+                <div style="width:40%; height:30px;  float: left;">
+                    <div style="float:left;"><h5><a href="{% url 'sccteam' m.visita.id %}" style="color: black;text-decoration: none;">{{ m.visita.nombre }}</a></h5></div>
+                    <img src="{{ m.visita.logo.url }}"  style="height: 30px; float:right;">
+                </div>
+
+              </div>
+              <div class="card-footer text-muted">
+                {{m.fase}} | <a href="{% url 'viewmatch' m.id %}" target="_blank">view</a>
+
+              </div>
+
+            </div>
+
+        </div>
+        <br>
+
+        {% endfor %}
+
+<hr>
+{% endif %}
+
+<h4>Group Stage</h4>
+
+    <table class="table table-striped" style=" width:auto;">
+          <thead>
+          <tr>
+            <th scope="col">Fase</th>
+            <th scope="col">Equipo</th>
+            <th scope="col">Pts</th>
+            <th scope="col">PJ</th>
+            <th scope="col">PG</th>
+            <th scope="col">PE</th>
+            <th scope="col">PP</th>
+
+            <th scope="col">GF</th>
+            <th scope="col">GC</th>
+            <th scope="col">DG</th>
+          </tr>
+          </thead>
+          <tbody>
+            {% for f in tp2 %}
+                <tr>
+                  <td>{{f.fase}}</td>
+                    <td><a href="{% url 'sccteam' f.equipo_id %}" style="text-decoration:none;">{{f.equipo}}</a></td>
+                    <td>{{f.ptos}}</td>
+                    <td>{{f.pj}}</td>
+                    <td>{{f.pg}}</td>
+                    <td>{{f.pe}}</td>
+                    <td>{{f.pp}}</td>
+
+                    <td>{{f.gf}}</td>
+                    <td>{{f.gc}}</td>
+                    <td>{{f.dg}}</td>
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        {% endif %}
+
+
+         <h4>{{thisLiga.nombre}} |  <a href="{% url 'viewliga' 1 thisLiga.id %}" style="text-decoration: none;">Top Goleadores</a></h4>
+
+    <table class="table table-striped" style=" width:auto;">
+          <thead>
+          <tr>
+            <th scope="col">Jugador</th>
+            <th scope="col">Equipo</th>
+            <th scope="col">Goles</th>
+            <th scope="col">Penales</th>
+          </tr>
+          </thead>
+          <tbody>
+            {% for f in tablagoles %}
+                <tr>
+                    <td>{{f.jugador}}</td>
+                    <td>{{f.equipo}}</td>
+                    <td>{{f.goles}}</td>
+                    <td>{% if f.penales == 0 %}0{%elif f.penales == 1%}1{%else%}{{f.penales}}{%endif%}</td>
+
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+</article>
+
+
+{% endblock %}
+
+{% block rightbar %}
+<br><br>
+<h4>Leagues</h4>
+      <ul class="list-group">
+
+        {% for l in ligas %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+          <a href="{% url 'viewliga' 1 l.id %}" style="color:black; text-decoration: none;"> {{l.nombre}}</a>
+          </li>
+        {% endfor %}
+      </ul>
+{% endblock %}

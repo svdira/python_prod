@@ -1,0 +1,30 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}Add New Persona{% endblock %}
+
+{% block contenido %}
+<article>
+	<h4>Add Persona</h4>
+
+	<form method="POST">
+	  {% csrf_token %}
+	  <div class="form-group">
+	    <label for="exampleFormControlInput1">Nombre</label>
+	    <input type = "text" name="title" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <br>
+	  <div class="form-group">
+	    <label for="exampleFormControlTextarea1">Info</label>
+	    <textarea name = "info" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+	  </div>
+	  <br>
+	 
+	  <button type="submit" class="btn btn-primary">Add Entry</button>
+	</form>
+
+</article>
+
+
+
+
+{% endblock%}

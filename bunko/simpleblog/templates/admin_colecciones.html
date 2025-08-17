@@ -1,0 +1,74 @@
+{% extends 'base_dash.html' %}
+
+{% block titulo %}{{ ptitulo }}{% endblock %}
+
+
+
+{% block principal %}
+	<div class="row">
+    <div class="col-sm-6">
+
+        <h4>Add New Collection</h4>
+
+        <form method="POST" action="{% url 'addColeccionSB' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="exampleFormControlInput1">Nombre</label>
+            <input type = "text" name="nombre" class="form-control" id="exampleFormControlInput1">
+          </div>
+          <br>
+          <div class="form-group">
+            <label for="exampleFormControlTextarea1">Info</label>
+            <textarea name = "info" class="form-control" id="exampleFormControlTextarea1" rows="5"></textarea>
+          </div>
+           <br>
+
+          <button type="submit" class="btn btn-primary">Add Coleccion</button>
+        </form>
+
+    </div>
+    <div class="col-sm-6">
+
+      <h5>Colecciones</h5>
+
+
+           <form method="POST" action="#">
+              {% csrf_token %}
+            <div class="form-group">
+             <div class="row">
+            <div class="form-group col-sm-9 ">
+             
+              <input type = "text"  name="key_words" class="form-control" id="exampleFormControlInput1">
+            </div>
+            <div class="form-group col-sm-3">
+              
+              <button type="submit" class="btn btn-primary" style="width:80%">Search</button>
+            </div>
+            </div>
+          </form>
+
+           <br>
+
+      <div class="table-responsive small">
+
+         {% if colecciones %}
+
+        <table class="table table-striped table-sm w-auto">
+
+         
+            <tbody>
+            {% for p in colecciones %}
+            <tr>
+          
+              <td><a href="{% url 'viewColeccion' p.id %}" style="text-decoration: none;">{{p.nombre}} ({{p.nitems}})</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          
+      </table>
+      {% endif %}
+
+    </div>
+    </div>
+  </div>
+{% endblock %}

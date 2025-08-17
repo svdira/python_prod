@@ -1,0 +1,97 @@
+{% extends 'base_soccer.html' %}
+
+{% block titulo %}Match Squad{% endblock %}
+
+{% block contenido %}
+
+<h4>
+
+{% if equipo.nombre == partido.local.nombre %}<span style="color:blue; font-weight:bold;">{{partido.local.nombre}}</span>{%else%}{{partido.local.nombre}} {%endif%} vs
+{% if equipo.nombre == partido.visita.nombre %}<span style="color:blue; font-weight:bold;">{{partido.visita.nombre}}</span>{%else%}{{partido.visita.nombre}}{%endif%} | {{partido.fecha}} <br>
+@<span style="color:gray;">{{partido.liga.nombre}}</span></h4>
+
+
+{% if porteros %}
+    <br>
+    <h5>Goal Keepers</h5>
+    <ul class="list-group" style="width:50%;">
+    {%for p in porteros%}
+        <li class="list-group-item">{{p.jugador.jug.nombre}} ({% if p.tipo == '1' %}90{% elif p.tipo == '2' %}S{% elif p.tipo == '3' %}E{% elif p.tipo == '4' %}R{%endif%})</li>
+    {%endfor%}
+      </ul>
+{%endif%}
+
+{% if defensas %}
+    <br>
+    <h5>Defenders</h5>
+    <ul class="list-group" style="width:50%;">
+    {%for p in defensas%}
+        <li class="list-group-item">{{p.jugador.jug.nombre}} ({% if p.tipo == '1' %}90{% elif p.tipo == '2' %}S{% elif p.tipo == '3' %}E{% elif p.tipo == '4' %}R{%endif%})</li>
+    {%endfor%}
+      </ul>
+{%endif%}
+
+{% if medicampos %}
+    <br>
+    <h5>Midfielders</h5>
+    <ul class="list-group" style="width:50%;">
+    {%for p in medicampos%}
+        <li class="list-group-item">{{p.jugador.jug.nombre}} ({% if p.tipo == '1' %}90{% elif p.tipo == '2' %}S{% elif p.tipo == '3' %}E{% elif p.tipo == '4' %}R{%endif%})</li>
+    {%endfor%}
+      </ul>
+{%endif%}
+
+
+
+{% if delanteros %}
+    <br>
+    <h5>Forwards</h5>
+    <ul class="list-group" style="width:50%;">
+    {%for p in delanteros %}
+        <li class="list-group-item">{{p.jugador.jug.nombre}} ({% if p.tipo == '1' %}90{% elif p.tipo == '2' %}S{% elif p.tipo == '3' %}E{% elif p.tipo == '4' %}R{%endif%})</li>
+    {%endfor%}
+      </ul>
+{%endif%}
+
+
+{% if not_spec %}
+    <br>
+    <h5>Unknown Position</h5>
+    <ul class="list-group" style="width:50%;">
+    {%for p in not_spec%}
+        <li class="list-group-item">{{p.jugador.jug.nombre}} ({% if p.tipo == '1' %}90{% elif p.tipo == '2' %}S{% elif p.tipo == '3' %}E{% elif p.tipo == '4' %}R{%endif%})</li>
+    {%endfor%}
+      </ul>
+{%endif%}
+
+
+
+{% endblock %}
+
+{% block rightbar %}
+<h4>Add Player to Squad </h4>
+     <form method="POST" enctype="multipart/form-data" action = "{% url 'updatesquad'%}">
+        {% csrf_token %}
+        <br>
+      <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Player</label>
+          <select class="form-select mb-3" name="contrato">
+            {% for c in contratos %}
+                <option value="{{c.id}}">{{c.jug.nombre}}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Tipo</label>
+          <select class="form-select mb-3" name="tipo">
+                <option value="1">Titular 90</option>
+                <option value="2">Titular Sale</option>
+                <option value="3">Banca Entra</option>
+                <option value="4">Expulsado</option>
+          </select>
+        </div>
+        <input type="hidden" name="squad_id" value="{{sc_id}}">
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+{% endblock %}

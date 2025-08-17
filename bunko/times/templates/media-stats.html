@@ -1,0 +1,48 @@
+{% extends 'base_forms.html' %}
+{% load static %}
+
+{% block titulo %}Media Stats{% endblock %}
+
+{% block contenido %}
+<h4><a href="{% url 'statistics' %}">Books</a> | Stream</h4>
+<script src="{% static 'canvasjs.min.js' %}"></script>
+
+        <article>
+          <script>
+        window.onload = function () {
+          var chart1 = new CanvasJS.Chart("chartContainer1", {
+            theme: "light2",
+            title: {
+              text: "Hours watched by Week",
+              fontSize: 16
+            },
+
+            axisY: {
+              minimum: 0,
+              title: "",
+              stripLines: [{
+                value: 240,
+                label: "Goal"
+              }]
+            },
+            axisX:{
+              valueFormatString: "YY-MM-DD",
+            },
+
+            data: [{
+              type: "line",
+              xValueType:"dateTime",
+              yValueFormatString: "#,##0.0 Hours",
+              dataPoints: {{ data_points }}
+            }]
+          });
+
+        chart1.render();
+      }
+       </script>
+     <div id="chartContainer1"  style="width: 100%; height: 400px;display: inline-block;"></div>
+    </article>
+
+<br>
+
+{% endblock%}

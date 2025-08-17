@@ -1,0 +1,39 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}Add New Book List{% endblock %}
+
+{% block contenido %}
+<article>
+	<h4>Add Volume to {{this_series.series_title}}</h4>
+
+	<form method="POST">
+	  {% csrf_token %}
+	
+	  
+	  <div class="row">
+	  <div class="form-group col-sm-8">
+	    <label for="exampleFormControlInput1">Title</label>
+	    <input type = "text" name="title" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <div class="form-group col-sm-4">
+	     <label for="exampleFormControlInput1">Pub Date</label>
+	    <input type = "text" name="pubdate" class="form-control" id="exampleFormControlInput1">
+	  </div>
+
+	</div>
+
+	  <br>
+	<div class="form-group">
+	    <label for="exampleFormControlTextarea1">Sinopsis</label>
+	    <textarea name = "sinopsis" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+	  </div>
+	  <br>
+	  <button type="submit" class="btn btn-primary">Add Volume</button>
+	</form>
+
+</article>
+
+
+
+
+{% endblock%}

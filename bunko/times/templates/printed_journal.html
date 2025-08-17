@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Journal de {{this_year}}</title>
+</head>
+<body>
+
+	
+
+<h1>Journal de {{this_year}}</h1>
+
+	{% if this_posts %}
+        {% for a in this_posts %}
+          	<h2>{{a.created_at|date:"l, F j, Y"}}</h2> 
+            {{a.mdOutput|safe}}
+            <div style="clear:both;"></div>
+        {% endfor %}
+    
+	{% endif %}
+</body>
+</html>
+

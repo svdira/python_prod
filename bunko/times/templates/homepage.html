@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titulo %}The Times | Home{% endblock %}
+
+{% block contenido %}
+
+<script src="{% static 'js/masonry.pkgd.min.js' %}" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
+{%if npage == 1 %}
+<article>
+    <form method="POST" action="{% url 'savepost' %}">
+      {% csrf_token %}
+    <div class="form-group">
+
+	    <textarea name = "entrada" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+	  </div>
+	   <div class="row">
+	  <div class="form-group col-sm-6 col-lg-8 mb-8">
+	    <label for="exampleFormControlInput1">Date</label>
+	    <input type = "text" value="{% now 'Y-m-d' %}" name="fecha" class="form-control" id="exampleFormControlInput1">
+    </div>
+    <div class="form-group col-sm-6 col-lg-4 mb-4">
+        <label for="exampleFormControlInput1">&nbsp;&nbsp;</label>
+	    <button type="submit" class="btn btn-primary" style="width:100%">Post Update</button>
+	  </div>
+	  </div>
+    </form>
+</article>
+<br>
+{%endif%}
+
+
+<div class="row" data-masonry='{"percentPosition": true }'>
+  {% if on_reading %}
+  {% for r in on_reading %}
+  <div class="col-sm-6 col-lg-6 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><a href='{% url "diraBook" r.volume.id  %}' style="text-decoration: none;"><span style="color:grey;">[Now Reading]</span><br> {{r.volume.titulo}} ({{r.volume.pubyear}})</a>
+            <br><small class="text-muted" style="font-size: 0.7em; font-weight: normal;">{{r.volume.tipo|capfirst}} | {{r.volume.credit_links|safe}}</small></h5>
+          <p class="card-text">{{r.volume.headtext}}</p>
+        </div>
+      </div>
+       </div>
+  {% endfor %}
+  {%  endif %}
+  {% if now_watching %}
+  {% for r in now_watching %}
+  <div class="col-sm-6 col-lg-6 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><a href='{% url "show" r.temporada.show.id  %}' style="text-decoration: none;"><span style="color:grey;">[Now Watching]</span>
+          <br>{% if r.temporada.show.conteo_s == 1 %}{{r.temporada.show.title}}{%else%}{{r.temporada.titulo}}{% endif %}</a></h5>
+          <p class="card-text">{{r.temporada.headtext}}</p>
+        </div>
+      </div>
+       </div>
+  {% endfor %}
+  {%  endif %}
+  {% for a in pinned_posts %}
+<div class="col-sm-6 col-lg-6 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><a href='{% url "wiki" a.id  %}' style="text-decoration: none;">{{a.title}}</a>
+          	<br><small class="text-muted" style="font-size: 0.7em; font-weight: normal;">{{a.wtype.category|capfirst}} | {{a.updated_at|date:"M j, Y"}}</small></h5>
+          <p class="card-text">{{a.headtext}}</p>
+        </div>
+      </div>
+       </div>
+{% endfor %}
+{% for a in articles %}
+<div class="col-sm-6 col-lg-6 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><a href='{% url "wiki" a.id  %}' style="text-decoration: none;">{{a.title}}</a>
+          	<br><small class="text-muted" style="font-size: 0.7em; font-weight: normal;">{{a.wtype.category|capfirst}} {{a.onbookcomm|safe}}| {{a.created_at|date:"M j, Y"}}</small></h5>
+          <p class="card-text">{{a.headtext}}</p>
+        </div>
+      </div>
+       </div>
+{% endfor %}
+</div>
+
+<nav aria-label="Page navigation example">
+     <ul class="pagination">
+    {% if articles.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ articles.previous_page_number }}">Previous</a></li>
+    {% endif %}
+
+    <li class="page-item"><span class="page-link">Page {{ articles.number }} of {{ articles.paginator.num_pages }}</span> </li>
+
+    {% if articles.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ articles.next_page_number }}">Next</a></li>
+    {% endif %}
+    </ul>
+</nav>
+
+
+
+
+{% endblock%}
+
+{% block rightbar %}
+<br>
+
+<h4>Collections <a href="{% url 'addcoleccion' %}" style="text-decoration:none;">&#x271A;</a></h4>
+      <ul class="list-group">
+        {% for d in dpaginas %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+          <a href="{% url 'page' d.page__id %}" style="color:black; text-decoration: none;"> {{d.page__titulo}}</a>
+            <span class="badge bg-primary rounded-pill">{{d.qitems}}</span>
+          </li>
+        {% endfor %}
+      </ul>
+  <br>
+
+<h4>Authors</h4>
+      <ul class="list-group">
+        {% for d in authors %}
+   
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+          <a href="{% url 'diraPersona' d.persona.id %}" style="color:black; text-decoration: none;"> {{d.persona.nombre}}</a>
+            <span class="badge bg-primary rounded-pill">{{d.persona.nreadbooks}}/{{d.persona.nbooks}}</span>
+          </li>
+        
+        {% endfor %}
+      </ul>
+      <br><br>
+{% endblock %}

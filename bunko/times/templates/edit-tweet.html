@@ -1,0 +1,41 @@
+{% extends 'base_mono.html' %}
+
+{% block titulo %}Edit Tweet{% endblock %}
+
+{% block contenido %}
+
+
+<div class="row">
+	<div class="col-sm-6">
+		<article>
+			<h5>Edit Tweet of {{this_tweet.created_at}}</h5>
+
+			{% if codigo == 1 %}
+				<div class="alert alert-success" role="alert">
+			  Changes have been made to the tweet.
+			</div>
+			{% endif %}	
+			<form method="POST">
+			  {% csrf_token %}
+			  <div class="form-group">
+			    <label for="exampleFormControlTextarea1"><a href="/journal/1">&lt;&lt;&nbsp;Back</a></label>
+			    <textarea name = "info" class="form-control" id="exampleFormControlTextarea1" rows="12">{{this_tweet.texto}}</textarea>
+			  </div>
+			  <br>
+			  <button type="submit" class="btn btn-primary">Save Changes</button>
+			</form>
+		</article>
+
+	</div>
+
+	<div class="col-sm-6">
+		{{this_tweet.mdOutput|safe}}
+	</div>
+</div>
+
+
+
+
+
+
+{% endblock%}

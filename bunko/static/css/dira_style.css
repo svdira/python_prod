@@ -1,0 +1,42 @@
+
+.ppic{
+  position:relative;
+  width:48%;
+  padding-top:65%;
+  margin:1%;
+  border:1px solid grey;
+  float:left;
+  background-size: cover;
+  position:relative;
+  background-position: center;
+}
+
+.imgppic{
+  width: 35%;
+  margin-top:0.5em;
+  margin-right: 1.5em;
+  float: left;
+  border:1px solid grey;
+}
+
+.dira-truncate {
+  font-weight:bold;
+  font-size:1.5em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+
+.mediapic{
+  position:relative;
+  width:100%;
+  padding-top:65%;
+  margin:1%;
+  border:1px solid grey;
+  float:left;
+  background-size: cover;
+  position:relative;
+  background-position: center;
+}

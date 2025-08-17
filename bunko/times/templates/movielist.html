@@ -1,0 +1,56 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}{{this_lista.titulo}}: Movie Lists{% endblock %}
+
+{% block contenido %}
+<article>
+
+ <form method="POST">
+      {% csrf_token %}
+
+     <div class="row">
+    <div class="form-group col-sm-6 col-lg-8 mb-8">
+      <label for="exampleFormControlInput1">Search movie to add</label>
+      <input type = "text"  name="keyword" class="form-control" id="exampleFormControlInput1">
+    </div>
+    <div class="form-group col-sm-6 col-lg-4 mb-4">
+        <label for="exampleFormControlInput1">&nbsp;&nbsp;</label>
+      <button type="submit" class="btn btn-primary" style="width:100%">Search Movie</button>
+    </div>
+    </div>
+    </form>
+
+        {% if movie_s %}
+
+     {% for b in movie_s %}
+          <div class="col-sm-6 col-lg-12 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><a href="/addmovietolist/{{b.id}}/{{this_lista.id}}" style="text-decoration: none;">{{b.titulo}}</a></h5>
+                <p class="card-text">{{b.headtext}}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+    {% endif %}
+
+	<h4>{{this_lista.titulo}}</h4>
+
+	  <ul class="list-group">
+        {% for l in films %}
+          <li class="list-group-item">
+           {% if l.film.last_watch > 0 %}&#9989;{%else%}&#11036;{%endif%}
+           <a href="{% url 'movie' l.film.id %}" style="color:black; text-decoration: none;"> {{l.film.titulo}}</a>
+          </li>
+        {% endfor %}
+      </ul>
+
+
+
+</article>
+
+<br>
+
+
+{% endblock%}

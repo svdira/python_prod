@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{ptitulo}}</title>
+</head>
+<body>
+
+	
+
+<h1>{{ptitulo}}</h1>
+
+	{% if items %}
+        {% for a in items %} 
+        	<h3>{{a.pagina.titulo}}</h3>
+            {{a.pagina.mdOutput|safe}}
+            <hr>
+        {% endfor %}
+    
+	{% endif %}
+</body>
+</html>
+

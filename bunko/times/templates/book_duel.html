@@ -1,0 +1,64 @@
+{% extends 'base_forms.html' %}
+{% load static %}
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+{% block titulo %}Media Stats{% endblock %}
+
+{% block contenido %}
+  <article>
+    
+    <h4>{% if conteo_t > 0 %}Matched{%else%}<span style="color:green;">New!</span>{% endif %} Book Duel </h4>
+    
+    {% if book1 and book2 %}
+  <a href="{% url 'savebookduel' book1.id book2.id book1.id %}">
+  <div class='ppic' style='background-image:url("{{book1.mainPic}}");'>
+    <div style='background-color: rgba(77, 129, 221, 0.76);  position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;'>
+    <div style="position: absolute; text-align:center; padding-top:0.3em; top:10%; left:0; width:100%;">
+      <span style="color:white; padding: 0px; font-size:1.3em; margin-left: 5px; margin-bottom: 0px; font-weight:bold;">{{book1.titulo}}</span>
+      <br><br> <span style="color:white; padding: 0px; font-size:0.85em; margin-left: 5px; margin-bottom: 0px;">{{book1.cleantext|truncatechars:125}}</span>
+    </div>
+  </div>
+  </div>
+  </a>
+
+  <a href="{% url 'savebookduel' book1.id book2.id book2.id %}">
+  <div class='ppic' style='background-image:url("{{book2.mainPic}}");'>
+    <div style='background-color: rgba(77, 129, 221, 0.76);  position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;'>
+    <div style="position: absolute; text-align:center; padding-top:0.3em; top:10%; left:0; width:100%;">
+      <span style="color:white; padding: 0px; font-size:1.3em; margin-left: 5px; margin-bottom: 0px; font-weight:bold;">{{book2.titulo}}</span>
+      <br><br> <span style="color:white; padding: 0px; font-size:0.85em; margin-left: 5px; margin-bottom: 0px;">{{book2.cleantext|truncatechars:125}}</span>
+    </div>
+  </div>
+  </div>
+  </a>
+  <div style="clear:both;"></div>
+
+ <hr>
+ {% endif %}
+  <h4>Top Books</h4>
+
+
+   <ul class="list-group">
+        {% for a in topbooks %}
+          <li class="list-group-item">
+         <a href="{% url 'book' a.book_id %}" style="color:black; text-decoration: none;">{{a.title}} ({{a.pub_year}}) </a> <span style="color:grey;"><i>&#123;{{a.rank_p}}% of {{a.duels}}&#125;</i></span>
+          </li>
+        {% endfor %}
+      </ul>
+
+
+  </article>
+
+<br>
+
+{% endblock%}

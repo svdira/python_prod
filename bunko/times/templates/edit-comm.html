@@ -1,0 +1,22 @@
+{% extends 'base_soccer.html' %}
+
+{% block titulo %}Edit Wiki{% endblock %}
+
+{% block contenido %}
+
+<article>
+     <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+      
+       <div class="mb-3">
+   
+         <textarea class="form-control" name="comm" aria-label="With textarea" style="height: 150px;">{{comentario.comm}}</textarea>
+        </div>
+       
+         <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</article>
+<hr>
+
+
+{% endblock %}

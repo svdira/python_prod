@@ -1,0 +1,34 @@
+{% extends 'base_mono.html' %}
+{% load static %}
+
+{% block titulo %}The Times | Shows History{% endblock %}
+
+{% block contenido %}
+
+
+
+<script src="{% static 'js/masonry.pkgd.min.js' %}" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
+
+
+     <div class="row" data-masonry='{"percentPosition": true }'>
+        {% for a in watchedshows %}
+     
+        <div class="col-sm-4 col-lg-6 mb-4">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">
+                    <a href='{% url "show" a.sseason.show.id  %}' style="text-decoration: none;">
+                      {% if a.show.conteo_s > 1 %}{{a.sseason.show.title}} {{a.sseason.season_t}} {%else%} {{a.sseason.show.title}} {%endif%}({{a.sseason.premiere}})</a>
+                    <br><small class="text-muted" style="font-size: 0.7em; font-weight: normal;">{{a.finish_d}}</small></h5>
+                  <p class="card-text">{{a.sseason.headtext}}</p>
+                </div>
+              </div>
+               </div>
+  
+        {% endfor %}
+      </div>
+
+
+
+
+{% endblock%}

@@ -1,0 +1,126 @@
+{% extends 'base_listing.html' %}
+
+{% block titulo %}{{this_wiki.title}}{% endblock %}
+
+{% block contenido %}
+
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Info</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Admin</button>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+  	<br>
+  	<article class="blog-post">
+		<h4>{{this_wiki.title}}</small></h4>
+
+		 {% if this_wiki.mainPic %}<img src="{{this_wiki.mainPic}}" style="border:1px solid grey; float:right; width:40%; margin-left: 16px; margin-bottom: 16px;">{% endif %}
+
+		{{this_wiki.mdOutput|safe}}
+
+		<div style="clear:both;"></div>
+
+	</article>
+  </div>
+  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+      <br>
+      <h4>Edit Article</h4>
+	<form method="POST" action="{% url 'fastedit' %}">
+	  {% csrf_token %}
+	  <div class="form-group">
+	    <label for="exampleFormControlTextarea1">Content</label>
+	    <textarea name = "info" class="form-control" id="exampleFormControlTextarea1" rows="12">{{this_wiki.info}}</textarea>
+	  </div>
+	  <br>
+	  <div class="form-group">
+	    <label for="exampleFormControlInput1">Title</label>
+	    <input type = "text" name="title" value="{{this_wiki.title}}" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <br>
+	  <div class="form-group">
+	    <label for="exampleFormControlSelect1">Category</label>
+	    <select class="form-control" name="cat_id" id="exampleFormControlSelect1">
+	    	{% for w in wtypes %}
+	      		<option value = "{{w.id}}" {% if this_wiki.wtype.id == w.id %} selected {%endif%}>{{w.category}}</option>
+	    	{% endfor %}
+	    </select>
+	  </div>
+	  <br>
+
+	  <input type="hidden" name="wikiid" value="{{this_wiki.id}}">
+	  <input type="hidden" name="colid" value="{{pagina.id}}">
+	  <input type="hidden" name="origen" value="wiki_2">
+	  <button type="submit" class="btn btn-primary">Save Changes</button>
+	</form>
+
+  		<br>
+  	<h4>Add Photo</h4>
+
+	<form method="POST" enctype="multipart/form-data" action="{% url 'addwikiphoto' %}">
+	  {% csrf_token %}
+
+	  <div class="form-group">
+	    <label for="exampleFormControlSelect1">Media Type</label>
+	    <select class="form-control" name="img_type" id="exampleFormControlSelect1">
+	      		<option value = "1">Cover</option>
+	      		<option value = "2">Portrait</option>
+	      		<option value = "3">Panorama</option>
+	    </select>
+	  </div>
+	  <br>
+	  <div class="form-group">
+    	<label for="exampleFormControlFile1">File</label>
+    	<input type="file" name = "imagen" class="form-control-file" id="exampleFormControlFile1">
+  	</div>
+	  <br>
+	  <input type="hidden" name="wiki_id" value="{{this_wiki.id}}">
+	  <button type="submit" class="btn btn-primary">Add Entry</button>
+	</form>
+  	<br>
+  	<h4>Add to collection</h4>
+
+	<form method="POST" action="{% url 'appendwiki' %}">
+	  {% csrf_token %}
+	  <div class="row">
+	  <div class="form-group">
+	    <label for="exampleFormControlSelect1">Page</label>
+	    <select class="form-control" name="pageid" id="exampleFormControlSelect1">
+	    	{% for p in paginas %}
+	      		<option value = "{{p.id}}">{{p.titulo}}</option>
+	    	{% endfor %}
+	    </select>
+	  </div>
+	</div>
+	  <br>
+	  <input type="hidden" value = "{{this_wiki.id}}" name="wikiid">
+	  <button type="submit" class="btn btn-primary">Add to collection</button>
+	</form>
+
+	<br>
+
+  </div>
+</div>
+
+
+
+{% endblock%}
+
+
+
+{% block rightbar %}
+<br>
+
+<h4>Content <a href="{% url 'addwiki' pagina.id %}" style="text-decoration:none;">&#x271A;</a></h4>
+      <ul class="list-group">
+        {% for d in all_items %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+          <a href="{% url 'itemcol' d.child.id d.page.id %}" style="color:black; text-decoration: none;"> {{d.child.title}}</a>
+          </li>
+        {% endfor %}
+      </ul>
+{% endblock %}

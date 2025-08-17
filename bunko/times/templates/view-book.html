@@ -1,0 +1,233 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}{{this_book.title}}{% endblock %}
+
+{% block contenido %}
+
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Info</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Hist</button>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+  	<br>
+  	<article class="blog-post">
+  	
+	<h4>{{this_book.titulo}}<br><small class="text-muted" style="font-size: 0.7em; font-weight: normal;">{{this_book.wtype.category|capfirst}} | {{this_book.authors_links|safe}} | <a href="{% url 'addwikibook' this_book.id %}" style="text-decoration: none; color:gray;">Add Wiki</a> | <a href="{% url 'addbookentity' this_book.id %}" style="text-decoration: none; color:gray;">Add Ent</a> | <a href="{% url 'editbookinfo' this_book.id %}" style="text-decoration: none; color:gray;">Edit</a></small></h4>
+
+	{% if barras %}
+		{%for b in barras%}
+		<b>Progress: {% if b.units == 'AudioBook' %}{{b.tiempo_consumido}}{% else %}{{b.avance}}{% endif %}/{% if b.units == 'AudioBook' %}{{b.tiempo_total}}{%else%}{{b.cantidad}}{% endif %} ({{b.prct_prog}}%)</b>
+			<div class="progress">
+
+          <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width:{{b.prct_prog}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+       </div>
+       	<form method="POST" action="{% url 'saveprogress' %}">
+					  {% csrf_token %}
+					  <div class="row">
+					  <div class="form-group col-sm-4">
+					    <label for="exampleFormControlInput1">Date</label>
+					    <input type = "text" value="{% now 'Y-m-d' %}" name="fecha" class="form-control" id="exampleFormControlInput1">
+					  </div>
+					  <div class="form-group col-sm-4">
+					    <label for="exampleFormControlInput1">{%if b.units == 'AudioBook' %}Time Read{% else %}Pages Read{% endif %}</label>
+					    <input type = "text" name="progress" class="form-control" id="exampleFormControlInput1">
+					  </div>
+					  <div class="form-group col-sm-4">
+					   <br>
+					    <button type="submit" class="btn btn-primary" style="width:100%">Save Progress</button>
+
+					  </div>
+
+					</div>
+					  <br>
+					  <input type="hidden" value = "{{b.id}}" name="barraid">
+					  <input type="hidden" value = "{{this_book.id}}" name="bookid">
+					</form>
+		{%endfor%}
+	{%endif%}
+	  {% if this_book.mainPic %}<img src="{{this_book.mainPic}}" style="border:1px solid grey; float:left; width:40%; margin-right: 16px; margin-bottom: 16px;">{% endif %}
+
+	{{this_book.cleantext|linebreaks}}
+
+	<div style="clear:both;"></div>
+
+	{% if relw %}
+        <div style="clear:both;"></div>
+
+			{% for a in relw %}
+
+			          <h5 class="card-title"><a href='{% url "editwiki" a.mwiki.id  %}' style="text-decoration: none;">{{a.mwiki.title}}</a></h5>
+			          {{a.mwiki.mdOutput|safe}}
+			          <div style='clear:both;'></div>
+			          <hr>
+
+
+			{% endfor %}
+
+
+			{%endif%}
+
+		{% if btags %}
+	<h5>Tags</h5>
+	<div style="position: relative;">
+
+		{% for t in btags %}
+		<a href="{% url 'viewbooktag' t.tag %}"><div style="float:left; margin:0.25em; border: 1px solid grey; padding:0.3em; border-radius: 3px;">
+		 	&nbsp;{{ t.tag }}&nbsp;
+		</div></a>
+		{% endfor %}
+
+	</div><br><div style="clear:both;"></div><br>
+	{% endif %}
+
+	{% if citas %}
+		<h5>Quotes</h5>
+		<ul class="list-group">
+		{% for c in citas %}
+			<li class="list-group-item">
+    		{{c.quote}}
+  		</li>
+		{% endfor %}
+	</ul>
+	<br>
+	{% endif %}
+
+{% if entidades %}
+
+<h5>Book Entities <a href="{% url 'addbookentity' this_book.id %}" style="text-decoration:none;">&#x271A;</a></h5>
+
+<ul class="list-group">
+{% for e in entidades %}
+	<li class="list-group-item">
+        <a href="{% url 'viewentity' e.id %}" style="color:black; text-decoration: none;"> <b>{{e.nombre}}:</b> {{e.headtext}}</a>
+    </li>         
+   {% endfor %}
+  </ul>
+
+{%endif%}
+
+</article>
+  </div>
+  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+  	<br>
+  	<h5>Add Progress Bar</h5>
+  	<form method="POST" action="{% url 'addprogressbar' %}">
+	  {% csrf_token %}
+	  <div class="row">
+	  <div class="form-group col-sm-4">
+	    <label for="exampleFormControlInput1">Start Date:</label>
+	    <input type = "text" value="{% now 'Y-m-d' %}" name="start_date" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <div class="form-group col-sm-4">
+	    <label for="exampleFormControlSelect1">Format</label>
+	    <select class="form-control" name="units" id="exampleFormControlSelect1">
+	      		<option value = "Printed">Printed</option>
+	      		<option value = "Kindle">Kindle</option>
+	      		<option value = "AudioBook">AudioBook</option>
+	    </select>
+	  </div>
+	  <div class="form-group col-sm-4">
+	    <label for="exampleFormControlInput1">Pages/Time(h:m):</label>
+	    <input type = "text" name="cantidad" class="form-control" id="exampleFormControlInput1">
+	  </div>
+
+	</div>
+	  <br>
+	  <input type="hidden" name="book_id" value="{{this_book.id}}">
+	  <button type="submit" class="btn btn-primary">Add Progress Bar</button>
+	</form>
+  	<br>
+  	<h4>Add Media</h4>
+
+	<form method="POST" enctype="multipart/form-data" action="{% url 'addbookmedia' %}">
+	  {% csrf_token %}
+
+	  <div class="form-group">
+	    <label for="exampleFormControlSelect1">Media Type</label>
+	    <select class="form-control" name="img_type" id="exampleFormControlSelect1">
+	      		<option value = "1">Cover</option>
+	      		<option value = "2">Portrait</option>
+	      		<option value = "3">Panorama</option>
+	    </select>
+	  </div>
+	  <br>
+	  <div class="form-group">
+    	<label for="exampleFormControlFile1">File</label>
+    	<input type="file" name = "imagen" class="form-control-file" id="exampleFormControlFile1">
+  	</div>
+	  <br>
+	  <input type="hidden" name="media_type" value="1">
+	  <input type="hidden" name="media_id" value="{{this_book.id}}">
+	  <button type="submit" class="btn btn-primary">Add Entry</button>
+	</form>
+<br>
+ 	<h4>Add Tags</h4>
+
+	<form method="POST" action="{% url 'addbooktags' %}">
+	  {% csrf_token %}
+	  <div class="form-group">
+	    <label for="exampleFormControlInput1">Tags</label>
+	    <input type = "text" name="tags" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <br>
+	  <input type="hidden" name="book" value="{{this_book.id}}">
+	  <button type="submit" class="btn btn-primary">Add Entry</button>
+	</form>
+<br>
+
+<h4>Add to list</h4>
+<br>
+<hr>
+<form method="POST" action="{% url 'addbooktolist' %}">
+	  {% csrf_token %}
+
+	  <div class="form-group">
+	    <label for="exampleFormControlSelect1">Book List</label>
+	    <select class="form-control" name="lista_id" id="exampleFormControlSelect1">
+	    	{% for w in blistas %}
+	      		<option value = "{{w.id}}">{{w.listname}}</option>
+	    	{% endfor %}
+	    </select>
+	  </div>
+	  <br>
+	  <input type="hidden" name="book_id" value="{{this_book.id}}">
+	  <button type="submit" class="btn btn-primary">Add to this list</button>
+	</form>
+	<br>
+	<hr>
+	<h4>Add Quote</h4>
+	<form method="POST" action="{% url 'addbookquote' %}">
+		{% csrf_token %}
+
+		<div class="form-group">
+	    <label for="exampleFormControlTextarea1">Quote</label>
+	    <textarea name = "cita" class="form-control" id="exampleFormControlTextarea1" rows="6"></textarea>
+	  </div>
+	  <input type="hidden" name="book_id" value="{{this_book.id}}">
+	  <br>
+	  <button type="submit" class="btn btn-primary">Add Quote</button>
+	  <br>
+
+	</form>
+
+	<br>
+	<hr>
+	
+
+
+
+  </div>
+</div>
+
+
+
+
+
+
+{% endblock%}

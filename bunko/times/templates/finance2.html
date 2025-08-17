@@ -1,0 +1,152 @@
+{% extends 'base_finance.html' %}
+{% load humanize %}
+
+{% block titulo %}Dira, Inc. Finance Reports{% endblock %}
+
+{% block leftbar %}
+
+<h4>Agregar Movimiento</h4>
+ <form method="POST" action="{% url 'savetrx' %}">
+        {% csrf_token %}
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Monto</label>
+        <input type="text" name="monto" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      </div>
+      <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Cuenta Debitar</label>
+          <select class="form-select mb-3" name="tipotrx">
+            {% for t in tiposT %}
+                <option value="{{t.id}}">{{t.desc}}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Cuenta Cargar</label>
+          <select class="form-select mb-3" name="cuenta">
+            {% for c in cuentas %}
+                <option value="{{c.id}}">{{c.nombre}}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+       <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Descripcion</label>
+         <input type="text" name="detalle" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+
+
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Fecha</label>
+         <input type="text" name="fecha" value="{% now 'Y-m-d' %}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+
+          <button type="submit" class="btn btn-primary">Agregar Movimiento</button>
+    </form>
+{% endblock %}
+
+
+{% block contenido %}
+
+<article>
+
+<h4>Cuentas </h4>
+      <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col">Cuenta</th>
+            <th scope="col" style="text-align:right;">Saldo</th>
+          </tr>
+          </thead>
+          <tbody>
+            {% for s in saldos %}
+                <tr>
+                    <td>{{s.cuenta}}</td>
+                    <td style="text-align:right;">{{s.balance_final|floatformat:"2"|intcomma}}</td>
+                </tr>
+            {% endfor %}
+          <tr>
+              <th>Net Balance</th>
+              <th style="text-align:right;">{{fbal|floatformat:"2"|intcomma}}</th>
+          </tr>
+          </tbody>
+        </table>
+        <br><br>
+    <h4>Moviemientos</h4>
+      <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col">Fecha</th>
+            <th scope="col">Monto</th>
+            <th scope="col">Destino</th>
+            <th scope="col">Cuenta</th>
+          </tr>
+          </thead>
+          <tbody>
+            {% for tx in trxs%}
+                <tr>
+                    <td>{{tx.fecha}}</td>
+                    <td style="text-align:right;">{{tx.monto}}</td>
+                    <td>{{tx.credito.desc}}</td>
+                    <td>{{tx.debito.nombre}}</td>
+
+                </tr>
+            {% endfor %}
+
+          </tbody>
+        </table>
+</article>
+
+
+{% endblock %}
+
+{% block rightbar %}
+    <h4>Trasladar Fondos</h4>
+    <form method="POST" action="{% url 'savepmt' %}">
+        {% csrf_token %}
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Monto</label>
+        <input type="text" name="monto" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      </div>
+      <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Origen</label>
+          <select class="form-select mb-3" name="origen">
+            {% for c in cuentas %}
+                <option value="{{c.id}}">{{c.nombre}}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Destino</label>
+          <select class="form-select mb-3" name="destino">
+            {% for c in cuentas %}
+                <option value="{{c.id}}">{{c.nombre}}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+       <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Descripcion</label>
+         <input type="text" value="traslado" name="detalle" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+
+
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Fecha</label>
+         <input type="text" name="fecha" value="{% now 'Y-m-d' %}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+
+          <button type="submit" class="btn btn-primary">Agregar Movimiento</button>
+    </form>
+
+    <br><br>
+    <h4>Cortes</h4>
+      <ul class="list-group">
+        {% for c in cortes %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <a href="{% url 'viewmonth' c.fecha__year c.fecha__month %}" style="color:black; text-decoration: none;"> {{c.fecha__year}}-{{ c.fecha__month}}</a>
+          </li>
+        {% endfor %}
+      </ul>
+{% endblock %}

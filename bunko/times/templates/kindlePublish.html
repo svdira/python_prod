@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>The Asteroid B612 {{ this_page.titulo }}</title>
+</head>
+<body>
+
+<h1>The Asteroid B612 {{ this_page.titulo }}</h1>
+	{%if children %}
+		{% for c in children %}
+			<h2>{{c.child.title}}</h2>
+			{{c.child.cleantext|safe|linebreaks}}
+		{% endfor %}
+	{%endif%}
+</body>
+</html>

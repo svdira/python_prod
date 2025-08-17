@@ -1,0 +1,48 @@
+{% extends 'base_dash.html' %}
+
+{% block titulo %}{{ ptitulo }}{% endblock %}
+
+
+
+{% block principal %}
+	<br><b>Add Category</b><br>
+	 <form method="POST" action="{% url 'addCategoria' %}">
+      {% csrf_token %}
+	   <div class="row">
+	  <div class="form-group col-sm-6 col-lg-8 mb-8">
+	    <label for="exampleFormControlInput1">Nombre Categoria</label>
+	    <input type = "text" name="nombre_categoria" class="form-control" id="exampleFormControlInput1">
+    </div>
+    <div class="form-group col-sm-6 col-lg-4 mb-4">
+        <label for="exampleFormControlInput1">&nbsp;&nbsp;</label>
+	    <button type="submit" class="btn btn-primary" style="width:100%">Agregar Categoria</button>
+	  </div>
+	  </div>
+    </form>
+
+
+    <h5>Lista de categorias</h5>
+
+    <div class="table-responsive small">
+        <table class="table table-striped table-sm w-auto">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Nombre Categoria</th>
+            </tr>
+          </thead>
+
+          {% if categorias %}
+          	<tbody>
+          	{% for c in categorias %}
+            <tr>
+              <td>{{c.id}}</td>
+              <td>{{c.nombre_categoria}}</td>
+           	</tr>
+           	{% endfor %}
+        	</tbody>
+          {% endif %}
+
+    	</table>
+    </div>
+{% endblock %}

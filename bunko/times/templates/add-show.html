@@ -1,0 +1,73 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}Add New Show{% endblock %}
+
+{% block contenido %}
+<article>
+	<h4>Add Show Season</h4>
+
+	<form method="POST">
+	  {% csrf_token %}
+	  <div class="form-group">	
+	    <label for="exampleFormControlInput1">Title</label>
+	    <input type = "text" name="title" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <br>
+	  <div class="form-group">
+	    <label for="exampleFormControlSelect1">Show Type</label>
+	    <select class="form-control" name="cat_id" id="exampleFormControlSelect1">
+	    	{% for w in showtypes %}
+	      		<option value = "{{w}}">{{w}}</option>
+	    	{% endfor %}
+	    </select>
+	  </div><br>
+	   <div class="row">
+	  <div class="form-group col-sm-3">	
+	    <label for="exampleFormControlInput1">Premiere</label>
+	    <input type = "text" name="premiere" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <div class="form-group col-sm-3">	
+	    <label for="exampleFormControlInput1">Finale</label>
+	    <input type = "text" name="finale" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <div class="form-group col-sm-3">	
+	    <label for="exampleFormControlInput1">Episodes</label>
+	    <input type = "text" name="episodes" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <div class="form-group col-sm-3">
+	    <label for="exampleFormControlSelect1">Avg Duration</label>
+	    <input type = "text" name="avgduration" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	</div>
+	  <br>
+	  <div class="form-group">
+	    <label for="exampleFormControlTextarea1">Content</label>
+	    <textarea name = "info" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+	  </div>
+	  <br>
+	
+	<h4>Add to Series</h4>
+	<div class="form-group">
+	    <label for="exampleFormControlSelect1">Existing Show</label>
+	    <select class="form-control" name="nowshow" id="exampleFormControlSelect1">
+	    	<option value = "ninguno">None</option>
+	    	{% for w in show_series %}
+	      		<option value = "{{w.id}}">{{w.cname}}</option>
+	    	{% endfor %}
+	    </select>
+	  </div><br>
+	  <div class="form-group">	
+	    <label for="exampleFormControlInput1">New Show</label>
+	    <input type = "text" name="newtitle" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  
+	<br>
+	  <button type="submit" class="btn btn-primary">Add Show </button>
+	</form>
+
+</article>
+
+
+
+
+{% endblock%}

@@ -1,0 +1,68 @@
+l{% extends 'base_forms.html' %}
+
+{% block titulo %}Edit note #{{apunte.id}}{% endblock %}
+
+{% block contenido %}
+<article>
+
+
+
+
+	<h5>Add consumo to {{this_apunte.id}}</h5>
+
+
+    <form method="POST" action="{% url 'addapucon' %}">
+      {% csrf_token %}
+     <div class="row">
+	
+    <div class="form-group col-sm-4">
+	    <label for="exampleFormControlInput1">Media Type</label>
+	    <select class="form-control" name="media_type" id="exampleFormControlSelect1">
+	    		{% if list_mt %}
+	    			{% for m in list_mt %}
+	      				<option value = "{{m}}">{{m}}</option>
+	      			{% endfor %}
+	      		{% endif %}
+	 		</select>
+    </div>
+    <div class="form-group col-sm-4">
+	    <label for="exampleFormControlInput1">Units</label>
+	    <select class="form-control" name="unidades" id="exampleFormControlSelect1">
+	    		{% if list_units %}
+	    			{% for m in list_units %}
+	      				<option value = "{{m}}">{{m}}</option>
+	      			{% endfor %}
+	      		{% endif %}
+	 		</select>
+    </div>
+      <div class="form-group col-sm-4">
+	    <label for="exampleFormControlInput1">Cantidad</label>
+	    <input type = "text"  name="cantidad" class="form-control" id="exampleFormControlInput1">
+    </div>
+
+     <div class="form-group col-sm-4">
+	    <label for="exampleFormControlInput1">Start Date</label>
+	    <input type = "text"  name="fecha_inicio" class="form-control" id="exampleFormControlInput1">
+    </div>
+    <div class="form-group col-sm-4">
+	    <label for="exampleFormControlInput1">Finish Date</label>
+	    <input type = "text"  name="fecha_fin" class="form-control" id="exampleFormControlInput1">
+    </div>
+
+    <div class="form-group col-sm-4">
+        <label for="exampleFormControlInput1">&nbsp;&nbsp;</label>
+	    <button type="submit" class="btn btn-primary" style="width:100%">Post</button>
+	  </div>
+	  </div>
+	  <input type="hidden" name="apu_id" value="{{this_apunte.id}}">
+    </form>
+
+
+  
+
+</article>
+
+
+
+
+{% endblock%}

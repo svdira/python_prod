@@ -1,0 +1,39 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}{{this_book.titulo}} ({{this_book.pubyear}}){% endblock %}
+
+{% block contenido %}
+<article>
+
+<h4>Start Reading: {{this_book.titulo}} ({{this_book.pubyear}})<br></h4>
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="row">
+    
+    <div class="form-group col-sm-6">
+      <label for="exampleFormControlInput1">Finish Date:</label>
+      <input type = "text" name="finish_date" class="form-control" id="exampleFormControlInput1">
+    </div>
+    
+
+    <div class="form-group col-sm-6 col-lg-6 mb-6">
+        <label for="exampleFormControlInput1">&nbsp;&nbsp;</label>
+      <button type="submit" class="btn btn-primary" style="width:100%">Finish Reading</button>
+    </div>
+
+  </div>
+    <br>
+ 
+
+  </form>
+
+
+</article>
+
+<br>
+
+
+
+
+{% endblock%}

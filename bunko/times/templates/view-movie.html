@@ -1,0 +1,129 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}{{this_movie.titulo}}{% endblock %}
+
+{% block contenido %}
+
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Info</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Hist</button>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+  	<br>
+  	<article class="blog-post">
+	<h4>{{this_movie.titulo}}</h4>
+
+	 {% if this_movie.mainPic %}<img src="{{this_movie.mainPic}}" style="border:1px solid grey; float:left; width:40%; margin-right: 16px; margin-bottom: 16px;">{% endif %}
+
+	{{this_movie.cleantext|linebreaks}}
+
+	{% if director %}
+	<p>Director:<br> {% for d in director %}<a href="{% url 'movieperson' d.persona %}"><span class="badge text-bg-success">{{d.persona}}</span></a>&nbsp;{% endfor %}
+	{% endif %}
+
+	{% if cast %}
+	<p>Cast:<br> {% for d in cast %}<a href="{% url 'movieperson' d.persona %}"><span class="badge text-bg-secondary">{{d.persona}}</span></a>&nbsp;{% endfor %}
+
+	{% endif %}
+
+		{% if relw %}
+			<h5>Related Wikis</h5>
+			<div class="row" data-masonry='{"percentPosition": true }'>
+			{% for a in relw %}
+			<div class="col-sm-6 col-lg-12 mb-4">
+			      <div class="card">
+			        <div class="card-body">
+			          <h5 class="card-title"><a href='{% url "wiki" a.mwiki.id  %}' style="text-decoration: none;">{{a.mwiki.title}}</a>
+			          	<br><small class="text-muted" style="font-size: 0.7em; font-weight: normal;">{{a.mwiki.wtype.category|capfirst}} | {{a.mwiki.updated_at|date:"M d, Y"}}</small></h5>
+			          <p class="card-text">{{a.mwiki.headtext}}</p>
+			        </div>
+			      </div>
+			       </div>
+			{% endfor %}
+			</div>
+			{%endif%}
+
+</article>
+  </div>
+  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+  	<br>
+  	<h4>Add consumo</h4>
+
+	<form method="POST" action="{% url 'watchmovie' %}">
+	  {% csrf_token %}
+	  <div class="row">
+	  <div class="form-group col-sm-6">
+	    <label for="exampleFormControlInput1">Watch Date</label>
+	    <input type = "text" name="start_d" class="form-control" value="{% now 'Y-m-d' %}" id="exampleFormControlInput1">
+	  </div>
+	  <div class="form-group col-sm-6">
+	   <br>
+	    <button type="submit" class="btn btn-primary">Add Consumo</button>
+
+	  </div>
+
+	</div>
+	  <br>
+	  <input type="hidden" value = "{{this_movie.id}}" name="movieid">
+	</form>
+<br>
+	<h4>Add Credits</h4>
+
+	<form method="POST" action="{% url 'addmoviecredits' %}">
+	  {% csrf_token %}
+	  <div class="form-group">
+	    <label for="exampleFormControlInput1">Director</label>
+	    <input type = "text" name="director" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <br>
+	  <div class="form-group">
+	    <label for="exampleFormControlTextarea1">Cast</label>
+	    <textarea name = "cast" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+	  </div>
+	  <input type="hidden" name="movie_id" value="{{this_movie.id}}">
+	  <button type="submit" class="btn btn-primary">Add Entry</button>
+	</form>
+
+
+
+	<br>
+
+	<h4>Add Media</h4>
+
+	<form method="POST" enctype="multipart/form-data" action="{% url 'addfilmmedia' %}">
+	  {% csrf_token %}
+
+	  <div class="form-group">
+	    <label for="exampleFormControlSelect1">Media Type</label>
+	    <select class="form-control" name="img_type" id="exampleFormControlSelect1">
+	      		<option value = "1">Cover</option>
+	      		<option value = "2">Portrait</option>
+	      		<option value = "3">Panorama</option>
+	    </select>
+	  </div>
+	  <br>
+	  <div class="form-group">
+    	<label for="exampleFormControlFile1">File</label>
+    	<input type="file" name = "imagen" class="form-control-file" id="exampleFormControlFile1">
+  	</div>
+	  <br>
+	  <input type="hidden" name="media_type" value="1">
+	  <input type="hidden" name="media_id" value="{{this_movie.id}}">
+	  <button type="submit" class="btn btn-primary">Add Entry</button>
+	</form>
+
+  </div>
+</div>
+
+
+
+
+
+
+{% endblock%}

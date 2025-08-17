@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{this_notebook.titulo}}</title>
+</head>
+<body>
+
+	
+
+<h1>{{this_notebook.titulo}}</h1>
+
+	{% if this_apuntes %}
+        {% for a in this_apuntes %}
+          	{% if a.subtitulo %}<h2>{{a.subtitulo}}</h2>{% endif %} 
+            {{a.mdOutput|safe}}
+        {% endfor %}
+    
+	{% endif %}
+</body>
+</html>
+

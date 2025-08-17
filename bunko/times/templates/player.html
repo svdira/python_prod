@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block titulo %}{{jug.nombre}}{% endblock %}
+
+{% block contenido %}
+
+<article>
+
+
+    <h4>{{jug.nombre}}  | <a href="{% url 'jugadores' %}">Market</a></h4>
+
+    {% for c in contratos %}
+    <div class="card">
+      <div class="card-body">
+        <div style="height:30px; float: left;">
+            <img src="{{ c.equ.logo.url }}" style="height: 30px;">&nbsp;
+            <div style="float:right;"> <h5><a href="{% url 'sccteam' c.equ.id %}" style="text-decoration:none;">{{ c.equ.nombre }}</a> | {{c.equ.pais}}</h5></div>
+        </div>
+      </div>
+    </div>
+    <br>
+    {% endfor %}
+
+
+    <table class="table table-striped" style=" width:auto;">
+          <thead>
+          <tr>
+            <th scope="col">Liga</th>
+            <th scope="col">Equipo</th>
+            <th scope="col">Goles</th>
+            <th scope="col">Penales</th>
+            <th scope="col">Own</th>
+
+          </tr>
+          </thead>
+          <tbody>
+            {% for f in goal_table %}
+                <tr>
+                    <td>{{f.liga}}</td>
+                    <td>{{f.equipo}}</td>
+                    <td>{{f.goles}}</td>
+                    <td>{% if f.penales == 0 %}0{%elif f.penales == 1%}1{%else%}{{f.penales}}{%endif%}</td>
+                    <td>{{f.goles_contra}}</td>
+
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+    <h5>Bio</h5>
+    {{jug.biographics|linebreaks}}
+
+</article>
+
+
+{% endblock %}
+
+{% block rightbar %}
+<br><br>
+
+<h4>Add Contract</h4>
+
+<form method="POST">
+  {% csrf_token %}
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Team</label>
+        <select class="form-select mb-3" name="team">
+          {% for e in equipos %}
+            <option value="{{e.id}}">{{e.nombre}}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Position</label>
+         <select class="form-select mb-3" name="position">
+            {% for l in listado %}
+                <option value="{{l}}" {% if l == thisC.position %}selected{%endif%}>{{l}}</option>
+            {% endfor %}
+          </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Number</label>
+        <input type="text" name="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      </div>
+
+      <button type="submit" class="btn btn-primary">Add Contract</button>
+    </form>
+
+    <hr />
+    <h4>Add Player</h4>
+<form method="POST">
+  {% csrf_token %}
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Name</label>
+        <input type="text" name="nombre" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      </div>
+
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Country</label>
+        <input type="text" name="pais" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      </div>
+
+
+
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Team</label>
+        <select class="form-select mb-3" name="team2">
+          {% for e in equipos %}
+            <option value="{{e.id}}">{{e.nombre}}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Position</label>
+         <select class="form-select mb-3" name="position">
+            {% for l in listado %}
+                <option value="{{l}}" {% if l == thisC.position %}selected{%endif%}>{{l}}</option>
+            {% endfor %}
+          </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Number</label>
+        <input type="text" name="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      </div>
+
+
+      <button type="submit" class="btn btn-primary">Add Player</button>
+    </form>
+
+{% endblock %}

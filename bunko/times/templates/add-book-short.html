@@ -1,0 +1,43 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}Add New Book{% endblock %}
+
+{% block contenido %}
+<article>
+	<h4>Add New {{author.title}}'s Books</h4>
+
+	<form method="POST" enctype="multipart/form-data">
+	  {% csrf_token %}
+	  <div class="form-group">
+	    <label for="exampleFormControlInput1">Title</label>
+	    <input type = "text" name="title"  class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <br>
+	  <div class="row">
+	  <div class="form-group col-sm-4">
+	    <label for="exampleFormControlInput1">Pub year</label>
+	    <input type = "text" name="pub_year" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <div class="form-group col-sm-4">
+	    <label for="exampleFormControlInput1">Orig Lan</label>
+	    <input type = "text" name="orig_lan" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <div class="form-group col-sm-4">
+	    <label for="exampleFormControlSelect1">Type</label>
+	    <select class="form-control" name="btype" id="exampleFormControlSelect1">
+	    	{% for p in booktypes %}
+	      		<option value = "{{p.id}}" >{{p.category|capfirst}}</option>
+	    	{% endfor %}
+	    </select>
+	  </div>
+	</div>
+	<br>
+	  <button type="submit" class="btn btn-primary">Add Book</button>
+	</form>
+
+</article>
+
+
+
+
+{% endblock%}

@@ -1,0 +1,33 @@
+{% extends 'base_mono.html' %}
+{% load static %}
+
+{% block titulo %}The Times | Movie History{% endblock %}
+
+{% block contenido %}
+
+
+
+<script src="{% static 'js/masonry.pkgd.min.js' %}" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
+
+
+     <div class="row" data-masonry='{"percentPosition": true }'>
+        {% for a in wmovies %}
+        <div class="col-sm-6 col-lg-4 mb-4">
+              <div class="card">
+
+                <div class="card-body">
+                  <h5 class="card-title"><a href='{% url "movie" a.film.id  %}' style="text-decoration: none;">{{a.film.titulo}}</a>
+                    <br><small class="text-muted" style="font-size: 0.7em; font-weight: normal;">{{a.wdate}}</small></h5>
+
+                  <p class="card-text">{{a.film.headtext}}</p>
+
+                </div>
+              </div>
+               </div>
+        {% endfor %}
+      </div>
+
+
+
+
+{% endblock%}

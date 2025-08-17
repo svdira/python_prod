@@ -1,0 +1,60 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}Add New Movie{% endblock %}
+
+{% block contenido %}
+<article>
+
+	<h4>Add New Movie</h4>
+
+	<form method="POST" action="{% url 'savemovie' %}" enctype="multipart/form-data">
+	  {% csrf_token %}
+	  <div class="form-group">	
+	    <label for="exampleFormControlInput1">Title</label>
+	    <input type = "text" name="title" class="form-control" value="{{str_titulo}}" id="exampleFormControlInput1">
+	  </div>
+	  <br>
+	  <div class="row">
+	  <div class="form-group col-sm-6">	
+	    <label for="exampleFormControlInput1" >Premiere</label>
+	    <input type = "text" name="premiere" value="{{str_premiere}}" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <div class="form-group col-sm-6">	
+	    <label for="exampleFormControlInput1">Runtime</label>
+	    <input type = "text" name="runtime" value="{{str_runtime}}" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	</div>
+	<br>
+	  <div class="form-group">
+	    <label for="exampleFormControlTextarea1">Movie Info</label>
+	    <textarea name = "info" class="form-control" id="exampleFormControlTextarea1" rows="3" >{{str_overview}}</textarea>
+	  </div>
+	  <br>
+
+	  <div class="form-group">	
+	    <label for="exampleFormControlInput1">Director</label>
+	    <input type = "text" name="director" value="{{str_director}}" class="form-control" id="exampleFormControlInput1">
+	  </div>
+	  <br>
+	  <div class="form-group">
+	    <label for="exampleFormControlTextarea1">Cast</label>
+	    <textarea name = "cast"  class="form-control" id="exampleFormControlTextarea1" rows="3">{{str_cast}}</textarea>
+	  </div><br>
+	   <div class="form-group">
+    	<label for="exampleFormControlFile1">Movie Poster</label>
+    	<input type="file" name = "imagen" class="form-control-file" id="exampleFormControlFile1">
+  	</div>
+  	<br>
+	  <button type="submit" class="btn btn-primary">Add Movie</button>
+	</form>
+
+	<h5>Poster</h5>
+	<img src="{{str_poster|safe}}">
+
+</article>
+
+
+
+
+
+{% endblock%}

@@ -1,0 +1,38 @@
+{% extends 'base_listing.html' %}
+
+{% block titulo %}{{this_persona}} Movie History{% endblock %}
+
+{% block contenido %}
+
+<article>
+		<h4>{{this_persona}} Movie History</h4>
+
+	  <ul class="list-group" reversed>
+        {% for a in creditos %}
+          <li class="list-group-item">
+         <a href="{% url 'movie' a.film.id %}" style="color:black; text-decoration: none;">{{a.film.titulo}}</a>
+          </li>
+        {% endfor %}
+      </ul>
+
+
+</article>
+<br>
+
+
+{% endblock%}
+
+
+
+{% block rightbar %}
+<br>
+
+<h4>More People</h4>
+      <ul class="list-group">
+        {% for d in personas %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+          <a href="{% url 'movieperson' d.persona %}" style="color:black; text-decoration: none;"> {{d.persona}} ({{d.ncredits}})</a>
+          </li>
+        {% endfor %}
+      </ul>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'base_soccer.html' %}
+{% load humanize %}
+
+{% block titulo %}Edit Contrato{% endblock %}
+
+{% block contenido %}
+
+<article>
+
+ <h2>{{thisC.jug.nombre}} <a href="{% url 'editBio' thisC.id %}" style="text-decoration: none;">&#9998;</a></h2>
+
+
+
+ {{thisC.jug.biographics|linebreaks}}
+ 
+    
+      
+</article>
+
+
+{% endblock %}
+
+{% block rightbar %}
+
+<br>
+ <h5><a href="{% url 'sccteam' thisC.equ.id %}">{{thisC.equ.nombre}}</a></h5>
+  {% if ngoles > 0 %}
+  <b>Goals: </b> ({{ngoles}}/{{pn}} pens{%if og > 0%}/-{{og}}{%endif%})
+     <table class="table table-striped" >
+          <thead>
+          <tr>
+            <th scope="col">League</th>
+            <th scope="col" style="text-align:right;">Goals</th>
+            <th scope="col" style="text-align:right;">Last Goal</th>
+          </tr>
+          </thead>
+          {% for gc in classGoles %}
+            <tr>
+                <td>{{gc.partido__liga__nombre}}</td>
+                  <td style="text-align:right;">{{gc.qgoles}}</td>
+                  <td style="text-align:right;">{{gc.maxfecha}}</td>
+              </tr>
+          {% endfor %}
+          <tbody>
+          </tbody>
+      </table>
+      <br>
+  {% endif %}
+
+
+  <h5>Edit contract</h5>
+
+<form method="POST">
+  {% csrf_token %}
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Name</label>
+        <input type="text" name="nombre" value = "{{ thisC.jug.nombre }}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      </div>
+
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Country</label>
+        <input type="text" name="pais" value = "{{ thisC.jug.pais }}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      </div>
+
+
+       <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Position</label>
+         <select class="form-select mb-3" name="position">
+            {% for l in listado %}
+                <option value="{{l}}" {% if l == thisC.position %}selected{%endif%}>{{l}}</option>
+            {% endfor %}
+          </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Number</label>
+        <input type="text" name="number" value="{{thisC.number}}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      </div>   
+
+      <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="active" id="flexCheckChecked" {% if thisC.active %}checked{%endif%}>
+      <label class="form-check-label" for="flexCheckChecked">
+        Active Contract
+      </label>
+    </div>
+      
+      <br>
+       
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+
+  
+
+{% endblock %}

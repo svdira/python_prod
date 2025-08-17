@@ -1,0 +1,37 @@
+{% extends 'base_mono.html' %}
+{% load static %}
+
+{% block titulo %}The Times | Show Queue{% endblock %}
+
+{% block contenido %}
+
+
+
+<script src="{% static 'js/masonry.pkgd.min.js' %}" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
+
+
+    
+    <div class="row" data-masonry='{"percentPosition": true }'>
+
+        {% for r in twshows %}
+        {% if r.consumos == 0 %}
+        <div class="col-sm-6 col-lg-6 mb-4">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title"><a href='{% url "show" r.id  %}' style="text-decoration: none;">{{r.title}} ({{r.transmision}})</a>
+                    <br><small class="text-muted" style="font-size: 0.7em; font-weight: normal;">{{r.wtype.category|capfirst}}</small></h5>
+                  <p class="card-text">{{r.headtext}}</p>
+                </div>
+              </div>
+               </div>
+                {%endif%}
+        {% endfor %}
+      </div>
+
+ 
+
+
+
+
+
+{% endblock%}

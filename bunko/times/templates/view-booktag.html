@@ -1,0 +1,24 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}Book Lists{% endblock %}
+
+{% block contenido %}
+<article>
+	<h4>Tag: {{now_tag}}</h4>
+
+	  <ul class="list-group">
+        {% for l in books %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+          <a href="{% url 'book' l.libro.id %}" style="color:black; text-decoration: none;"> {{l.libro.titulo}}</a>
+          </li>
+        {% endfor %}
+      </ul>
+
+
+
+</article>
+
+<br>
+
+
+{% endblock%}

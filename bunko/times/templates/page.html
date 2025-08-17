@@ -1,0 +1,32 @@
+{% extends 'base_mono.html' %}
+{% load static %}
+
+{% block titulo %}{{ this_page.titulo }}{% endblock %}
+
+{% block contenido %}
+
+<script src="{% static 'js/masonry.pkgd.min.js' %}" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
+
+<h4>{{this_page.titulo}}</h4>
+
+{{this_page.info|linebreaks}}
+
+<p><a href="{% url 'kindlePublish' this_page.id %}">Print to Publish</a> <a href="{% url 'addwiki' this_page.id %}">Add Item</a></p> 
+
+<div class="row" data-masonry='{"percentPosition": true }'>
+{% for a in children %}
+<div class="col-sm-6 col-lg-4 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><a href='{% url "itemcol" a.child.id this_page.id  %}' style="text-decoration: none;">{{a.child.title}}</a>
+          	<br><small class="text-muted" style="font-size: 0.7em; font-weight: normal;">{{a.child.wtype.category|capfirst}} | {{a.child.updated_at|date:"M j, Y"}}</small></h5>
+          <p class="card-text">{{a.child.headtext}}</p>
+        </div>
+      </div>
+       </div>
+{% endfor %}
+</div>
+
+
+
+{% endblock%}

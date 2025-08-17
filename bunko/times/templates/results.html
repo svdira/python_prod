@@ -1,0 +1,64 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}Search Results For: {{keyword}}{% endblock %}
+
+{% block contenido %}
+<article>
+	<h4>Results for {{keyword}}</h4>
+
+
+
+	  <div class="row" data-masonry='{"percentPosition": true }'>
+      {% if wikies %}
+        {% for b in wikies %}
+          <div class="col-sm-6 col-lg-12 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><a href='{% url "wiki" b.id  %}' style="text-decoration: none;">{{b.title}}</a>
+                  <br><small class="text-muted" style="font-size: 0.7em; font-weight: normal;">{{b.wtype.category|capfirst}} | {{b.updated_at|date:"M d, Y"}}</small></h5>
+                <p class="card-text">{{b.headtext}}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+    {% endif %}
+    {% if books %}
+
+         {% for b in books %}
+          <div class="col-sm-6 col-lg-12 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"><a href='{% url "book" b.id  %}' style="text-decoration: none;">{{b.titulo}}</a>
+                  <br><small class="text-muted" style="font-size: 0.7em; font-weight: normal;">{{b.wtype.category|capfirst}} | {{b.authors_links|safe}}</small></h5>
+                <p class="card-text">{{b.headtext}}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+        {% endif %}
+
+        {% if movies %}
+         {% for a in movies %}
+        <div class="col-sm-4 col-lg-12 mb-4">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title"><a href='{% url "movie" a.id  %}' style="text-decoration: none;">{{a.titulo}}</a></h5>
+                  <p class="card-text">{{a.headtext}}</p>
+                </div>
+              </div>
+               </div>
+        {% endfor %}
+        {% endif %}
+      </div>
+
+
+
+</article>
+
+<br>
+
+
+
+
+{% endblock%}

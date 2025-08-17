@@ -1,0 +1,414 @@
+{% extends 'base_soccer.html' %}
+
+
+
+{% block titulo %}Match Activity{% endblock %}
+
+
+
+{% block contenido %}
+
+ <article class="my-3" id="card">
+        <div class="col">
+            <div class="card">
+              <div class="card-header">
+                {{partido.liga.nombre}} | {{partido.fecha}} |
+                {% if partido.terminado == False %} <span style="text-align: right;">
+                    <a href="{% url 'closematch' partido.id %}">Close</a> | <a href="{% url 'editmatch' partido.id %}">Edit</a>
+                </span>{% endif %}
+              </div>
+              <div class="card-body">
+                <div style="width:40%; height:30px; float: left;">
+                    <img src="{{ partido.local.logo.url }}" style="height: 30px;">
+                    <div  class="truncate-text" style="float:right; text-align:right;"><h5><a href="{% url 'sccteam' partido.local.id %}" style="color: black;text-decoration: none;">{{ partido.local.nombre }}</a></h5></div>
+                </div>
+                <div style="width:20%; height:30px;  float: left; text-align: center; color:blue;">
+                <h5>{{partido.marcador}}</h5></div>
+                <div style="width:40%; height:30px;  float: left;">
+                    <div  class="truncate-text" style="float:left; text-align:left;"><h5><a href="{% url 'sccteam' partido.visita.id %}" style="color: black;text-decoration: none;">{{ partido.visita.nombre }}</a></h5></div>
+                    <img src="{{ partido.visita.logo.url }}"  style="height: 30px; float:right;">
+                </div>
+
+              </div>
+              <div class="card-footer text-muted">
+                <div style="float:left; width:48%;">
+                {% if lgoles %}
+                    {% for g in lgoles %}
+                        {{g.descriptor}}<br>
+                    {% endfor %}
+                {% endif %}
+
+                {% if lpens %}
+                <hr>
+                    {% for p in lpens %}
+                        {{p.contrato.jug.nombre}} {{p.icon|safe}}<br>
+                    {% endfor %}
+                {% endif%}
+              </div>
+
+              <div style="float:right; width:48%; text-align: right;">
+                {% if vgoles %}
+                    {% for g in vgoles %}
+                        {{g.descriptor}}<br>
+                    {% endfor %}
+                {% endif %}
+
+                {% if vpens %}
+                <hr>
+                    {% for p in vpens %}
+                        {{p.contrato.jug.nombre}} {{p.icon|safe}}<br>
+                    {% endfor %}
+                {% endif%}
+              </div>
+              <div style="clear:both;"></div>
+            </div>
+            </div>
+
+            {%if comentarios %}
+                <br>
+                <p style='line-height: 1.5em;'>
+            {% for com in comentarios%}
+                {% if com.minuto > 0 and com.minuto < 120 %}{{com.minuto}}' :: {% endif %}{{com.comm|safe}}
+                {% if partido.terminado == False %}<a href="{% url 'editComm' com.id %}" style='text-decoration: none;'>&#9998;</a>{%endif%}<br>
+            {% endfor %}
+
+
+            {%endif%}
+        </div>
+</article>
+{% if partido.terminado == False %}
+<div class="bd-example">
+        <nav>
+          <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">{{partido.local.nombre}}</button>
+            <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false" tabindex="-1">{{partido.visita.nombre}}</button>
+            <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false" tabindex="-1">Comments</button>
+          </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+          <div class="tab-pane fade active show" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="asignado" value="1">
+
+                     <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Jugador <a href="{% url 'newplayergoal' partido.local.id partido.id '1' %} ">Add New</a> </label>
+                      <select class="form-select mb-3" name="contrato">
+                            {% if jlocal %}
+                                {% for j in jlocal%}
+                                    <option value="{{j.id}}">{{j.jug.nombre}} </option>
+                                {% endfor %}
+                            {% endif %}
+                      </select>
+                    </div>
+
+                    <div class="mb-3 col-md-5" style="float: left; margin-right:2.5em;">
+                        <label for="exampleInputEmail1" class="form-label">Minuto</label>
+                        <input type="text"  name="minuto" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    </div>
+
+                    <div class="mb-3 col-md-5" style="float: left;">
+                        <label for="exampleInputEmail1" class="form-label">Adicional</label>
+                        <input type="text"  value="0" name="adicional" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    </div>
+
+                    <div style="clear: both;"></div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" name="penal" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Penalty</label>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" name="autogol" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Own Goal</label>
+                    </div>
+
+                     <button type="submit" class="btn btn-primary">Add Goal</button>
+                </form>
+
+                  <hr>
+
+                <h3>Penalty Round</h3>
+
+                <form method="POST" action="{% url 'regpenround' partido.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="asignado" value="1" />
+
+                     <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Jugador</label>
+                      <select class="form-select mb-3" name="contrato">
+                            {% if jlocal %}
+                                {% for j in jlocal%}
+                                    <option value="{{j.id}}">{{j.jug.nombre}}</option>
+                                {% endfor %}
+                            {% endif %}
+                      </select>
+                    </div>
+
+
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" name="anotado" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Scored</label>
+                    </div>
+
+                     <button type="submit" class="btn btn-primary">Add Penalty</button>
+                </form>
+                    <hr>
+                <h3>Add Player</h3>
+                <form method="POST" action="{% url 'addplayerv2' %}">
+                  {% csrf_token %}
+                      <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Name</label>
+                        <input type="text" name="nombre" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                      </div>
+
+                      <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label" >Country</label>
+                        <input type="text" name="pais" value="TBA" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                      </div>
+
+                      <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label" >Number</label>
+                        <input type="text" name="number" class="form-control" value="0" id="exampleInputEmail1" aria-describedby="emailHelp">
+                      </div>
+
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label" >Position</label>
+                         <select class="form-select mb-3" name="position">
+                            {% for l in listado %}
+                                <option value="{{l}}" {% if l == 'Not Specified' %}selected{%endif%} >{{l}}</option>
+                            {% endfor %}
+                          </select>
+                      </div>
+
+
+
+                      <input type="hidden" name="equipo" value="{{partido.local.id}}">
+                      <input type="hidden" name="partido" value="{{partido.id}}">
+
+
+                      <button type="submit" class="btn btn-primary">Add Player</button>
+                    </form>
+
+          </div>
+
+
+          <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                    <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="asignado" value="2">
+
+                     <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Jugador <a href="{% url 'newplayergoal' partido.visita.id partido.id '2' %}">Add New</a> </label></label>
+                      <select class="form-select mb-3" name="contrato">
+                            {% if jvisit %}
+                                {% for j in jvisit%}
+                                    <option value="{{j.id}}">{{j.jug.nombre}} </option>
+                                {% endfor %}
+                            {% endif %}
+                      </select>
+                    </div>
+
+                    <div class="mb-3 col-md-5" style="float: left; margin-right:2.5em;">
+                        <label for="exampleInputEmail1" class="form-label">Minuto</label>
+                        <input type="text"  name="minuto" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    </div>
+
+                    <div class="mb-3 col-md-5" style="float: left;">
+                        <label for="exampleInputEmail1" class="form-label">Adicional</label>
+                        <input type="text"  value="0" name="adicional" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    </div>
+
+                    <div style="clear: both;"></div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" name="penal" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Penalty</label>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" name="autogol" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Own Goal</label>
+                    </div>
+
+                     <button type="submit" class="btn btn-primary">Add Goal</button>
+                </form>
+
+                 <hr>
+
+                <h3>Penalty Round</h3>
+
+                <form method="POST" action="{% url 'regpenround' partido.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="asignado" value="2" />
+
+                     <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Jugador</label>
+                      <select class="form-select mb-3" name="contrato">
+                            {% if jvisit %}
+                                {% for j in jvisit%}
+                                    <option value="{{j.id}}">{{j.jug.nombre}}</option>
+                                {% endfor %}
+                            {% endif %}
+                      </select>
+                    </div>
+
+
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" name="anotado" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Scored</label>
+                    </div>
+
+                     <button type="submit" class="btn btn-primary">Add Penalty</button>
+                </form>
+
+                 <hr>
+                <h3>Add Player</h3>
+                <form method="POST" action="{% url 'addplayerv2' %}">
+                  {% csrf_token %}
+                      <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Name</label>
+                        <input type="text" name="nombre" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                      </div>
+
+                      <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label" >Country</label>
+                        <input type="text" name="pais" class="form-control" value="TBA" id="exampleInputEmail1" aria-describedby="emailHelp">
+                      </div>
+
+                      <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label"> Number</label>
+                        <input type="text" name="number" class="form-control" value="0" id="exampleInputEmail1" aria-describedby="emailHelp">
+                      </div>
+
+                       <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Position</label>
+                         <select class="form-select mb-3" name="position">
+                            {% for l in listado %}
+                                <option value="{{l}}" {% if l == 'Not Specified' %}selected{%endif%}>{{l}}</option>
+                            {% endfor %}
+                          </select>
+                      </div>
+
+
+
+                      <input type="hidden" name="equipo" value="{{partido.visita.id}}">
+                      <input type="hidden" name="partido" value="{{partido.id}}">
+
+
+                      <button type="submit" class="btn btn-primary">Add Player</button>
+                    </form>
+          </div>
+          <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+             <form method="POST" action="{% url 'addpartidocomm' %}">
+                {% csrf_token %}
+
+                <input type="hidden" name="partido" value="{{partido.id}}">
+
+                <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Minuto</label>
+                        <input type="text" name="minuto" value = "0" style="width: 3.1em;" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                      </div>
+
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Content</label>
+                    <textarea class="form-control" name="comm" aria-label="With textarea"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit Comments</button>
+
+
+            </form>
+          </div>
+        </div>
+        </div>
+{% endif %}
+
+
+ {% if matches %}
+
+ <h4>More from this league</h4>
+        {% for m in matches %}
+
+        <div class="col">
+            <div class="card">
+              <div class="card-header">
+                {{m.liga.nombre}} | {{m.fecha}}
+              </div>
+              <div class="card-body">
+                <div style="width:40%; height:30px; float: left;">
+                    <img src="{{ m.local.logo.url }}" style="height: 30px;">
+                    <div class="truncate-text" style="float:right; text-align:right;"><h5>{{ m.local.nombre }}</h5></div>
+                </div>
+                <div style="width:20%; height:30px;  float: left; text-align: center; color:blue;"><h5>
+                {% if m.terminado == True %}
+                {{m.marcador}}
+                {% else %}
+                &nbsp;-&nbsp;
+                {% endif%}
+            </h5>
+                </div>
+                <div style="width:40%; height:30px;  float: left;">
+                    <div class="truncate-text" style="float:left; text-align:left;"><h5>{{ m.visita.nombre }}</h5></div>
+                    <img src="{{ m.visita.logo.url }}"  style="height: 30px; float:right;">
+                </div>
+
+              </div>
+              <div class="card-footer text-muted">
+                {{m.fase}} | <a href="{% url 'viewmatch' m.id %}">view</a>
+              </div>
+            </div>
+        </div>
+        <br>
+
+        {% endfor %}
+    {% endif %}
+
+
+{% endblock %}
+
+{% block rightbar %}
+<br><br>
+<h4>Second Leg:</h4>
+
+  <form method="POST" action="{% url 'addsecleg' %}">
+    {% csrf_token %}
+    <div class="mb-3" >
+        <input type="hidden" value="{{ partido.id }}" name="partido">
+        <label for="exampleInputEmail1" class="form-label">Date:</label>
+        <input type="text"  name="fecha" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+<br>
+        <button type="submit" class="btn btn-primary">Add Match</button>
+    </div>
+  </form>
+
+<br><br>
+<h4>Squads</h4>
+      <ul class="list-group">
+
+
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+          <a href="{% url 'viewsquad' partido.id partido.local.id %}"  style="color:black; text-decoration: none;"> {{partido.local.nombre}}</a>
+          </li>
+
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+          <a href="{% url 'viewsquad' partido.id partido.visita.id %}" style="color:black; text-decoration: none;"> {{partido.visita.nombre}}</a>
+          </li>
+
+      </ul>
+
+<br><br>
+<h4>Leagues</h4>
+      <ul class="list-group">
+
+        {% for l in ligas %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+          <a href="{% url 'viewliga' 1 l.id %}" style="color:black; text-decoration: none;"> {{l.nombre}}</a>
+          </li>
+        {% endfor %}
+      </ul>
+{% endblock %}

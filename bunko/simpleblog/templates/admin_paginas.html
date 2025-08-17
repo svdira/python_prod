@@ -1,0 +1,89 @@
+{% extends 'base_dash.html' %}
+
+{% block titulo %}{{ ptitulo }}{% endblock %}
+
+
+
+{% block principal %}
+	<div class="row">
+    <div class="col-sm-6">
+
+        <h4>Add New Pagina</h4>
+
+        <form method="POST" action="{% url 'addPagina' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="exampleFormControlInput1">Title</label>
+            <input type = "text" name="titulo" class="form-control" id="exampleFormControlInput1">
+          </div>
+          <br>
+          <div class="form-group">
+            <label for="exampleFormControlSelect1">Category</label>
+            <select class="form-control" name="cat_id" id="exampleFormControlSelect1">
+              {% for c in categorias %}
+                  <option value = "{{c.id}}">{{c.nombre_categoria}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <br>
+          <div class="form-group">
+            <label for="exampleFormControlTextarea1">Content</label>
+            <textarea name = "info" class="form-control" id="exampleFormControlTextarea1" rows="12"></textarea>
+          </div>
+           <br>
+           <input type="hidden" name="fecha_hoy" value="{% now 'Y-m-d' %}">
+
+          <button type="submit" class="btn btn-primary">Add Pagina</button>
+        </form>
+
+    </div>
+    <div class="col-sm-6">
+
+      <h4>Last Entries</h4>
+
+
+           <form method="POST" action="#">
+              {% csrf_token %}
+            <div class="form-group">
+             <div class="row">
+            <div class="form-group col-sm-9 ">
+             
+              <input type = "text"  name="key_words" class="form-control" id="exampleFormControlInput1">
+            </div>
+            <div class="form-group col-sm-3">
+              
+              <button type="submit" class="btn btn-primary" style="width:80%">Search</button>
+            </div>
+            </div>
+          </form>
+
+      <div class="table-responsive small">
+
+        
+
+        <table class="table table-striped table-sm w-auto">
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Cat</th>
+              <th scope="col">Titulo</th>
+            </tr>
+          </thead>
+
+          {% if paginas %}
+            <tbody>
+            {% for p in paginas %}
+            <tr>
+              <td>{{p.fecha_creacion|date:"N j"}}</td>
+              <td>{{p.categoria.nombre_categoria}}</td>
+              <td><a href="{% url 'viewPagina' p.id %}" style="text-decoration: none;">{{p.titulo}}</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          {% endif %}
+
+      </table>
+    </div>
+    </div>
+  </div>
+{% endblock %}

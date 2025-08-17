@@ -1,0 +1,34 @@
+{% extends 'base_soccer.html' %}
+{% load humanize %}
+
+{% block titulo %}Edit Contrato{% endblock %}
+
+{% block contenido %}
+
+<article>
+
+ <h2>{{thisC.jug.nombre}}</h2>
+
+ <form method="POST">
+  {% csrf_token %}
+  <div class="mb-3">
+        <textarea class="form-control" name="biographics" aria-label="With textarea">{{thisC.jug.biographics}}</textarea>
+  </div>
+ 
+  <button type="submit" class="btn btn-primary">Save Changes</button>
+  </form>
+    
+      
+</article>
+
+
+{% endblock %}
+
+{% block rightbar %}
+
+
+  
+
+  
+
+{% endblock %}
