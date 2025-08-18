@@ -5,7 +5,7 @@
 {% block contenido %}
 <article>
 
-<h4>{% if this_show.ncons > 0  %}&#9989;{%else%}&#11036;{%endif%}{{this_show.show_title}}<br><small class="text-muted" style="font-size: 0.7em; font-weight: normal;"><a href="{% url 'diraWatchShow' this_show.id %}" style="text-decoration:none; color:grey;">Watch</a> | <a href="{% url 'diraShowSeries' series.coleccion.id %}" style="text-decoration:none; color:grey;">Series</a> </small></h4>
+<h4>{% if this_show.ncons > 0  %}&#9989;{%else%}&#11036;{%endif%}{{this_show.show_title}}<br><small class="text-muted" style="font-size: 0.7em; font-weight: normal;">{% if now_w %}<a href="{% url 'diraFinishShow' now_w.id %}" style="text-decoration:none; color:grey;">Finish</a>{%else%}<a href="{% url 'diraWatchShow' this_show.id %}" style="text-decoration:none; color:grey;">Start</a>{% endif %} | <a href="{% url 'diraShowSeries' series.coleccion.id %}" style="text-decoration:none; color:grey;">Series</a> </small></h4>
 
  
   {{this_show.sinopsis|linebreaks}}

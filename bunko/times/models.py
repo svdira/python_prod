@@ -1076,7 +1076,7 @@ class DiraBunkoSeriesPage(models.Model):
 class DiraBunkoSeriesConsumo(models.Model):
 	volume = models.ForeignKey(DiraBunkoSeriesVolume,on_delete=models.CASCADE)
 	fec_ini = models.DateField()
-	fec_fin = models.DateField()
+	fec_fin = models.DateField(blank=True,null=True)
 	formato = models.CharField(max_length=25)
 
 	def __str__(self):
@@ -1103,7 +1103,7 @@ class DiraTemporada(models.Model):
 
 	@property
 	def ncons(self):
-		n = TempConsumo.objects.filter(show=self).count()
+		n = TempConsumo.objects.filter(show=self,fec_fin__isnull=False).count()
 		return n
 
 	def __str__(self):

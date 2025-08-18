@@ -1,0 +1,36 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}{{this_volume.com_titulo}}{% endblock %}
+
+{% block contenido %}
+<article>
+
+<h4>Read: {{this_volume.com_titulo}}</h4>
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="row">
+    <div class="form-group col-sm-8">
+      <label for="exampleFormControlInput1">Finish Date:</label>
+      <input type = "text" name="finish_date" class="form-control" id="datepicker2">
+    </div>
+    <div class="form-group col-sm-4">
+  
+        <label for="exampleFormControlInput1">&nbsp;&nbsp;</label>
+        <button type="submit" class="btn btn-primary" style="width:100%">Reg Read</button>
+    </div>
+  </div>
+    <br>
+ 
+
+  </form>
+
+
+</article>
+
+<br>
+
+
+
+
+{% endblock%}

@@ -129,6 +129,8 @@ def homepage(request):
     resultados = paginator.get_page(page)
     pinned_posts = Wiki.objects.filter(id=180)
     on_reading = DiraConsumo.objects.filter(fec_fin__isnull=True)
+    on_lnreading = DiraBunkoSeriesConsumo.objects.filter(fec_fin__isnull=True)
+    now_watching = TempConsumo.objects.filter(fec_fin__isnull=True)
 
 
     if int(page) > 1:
@@ -139,7 +141,7 @@ def homepage(request):
     autores = sorted(DiraOcupation.objects.filter(ocupation='author').all().order_by('persona__nombre'),key=lambda t: t.persona.nbooks, reverse=True)
     dpaginas = PageRels.objects.values('page__titulo','page__id').annotate(qitems = Count('page__id'), lastup=Max('child__updated_at')).order_by('-lastup')[0:50]
 
-    return render(request,'homepage.html',{'articles':resultados,'pinned_posts':pinned_posts,'dpaginas':dpaginas,'npages':range(npages),'on_reading':on_reading,'authors':autores,'npage':int(page)})
+    return render(request,'homepage.html',{'articles':resultados,'pinned_posts':pinned_posts,'dpaginas':dpaginas,'npages':range(npages),'on_reading':on_reading,'on_lnreading':on_lnreading,'authors':autores,'npage':int(page),'now_watching':now_watching})
 
 def addbook(request):
 	personas = Wiki.objects.filter(wtype__category='author').order_by('title')
@@ -411,8 +413,12 @@ def addshow(request):
 def show(request,show_id):
 	this_show = DiraTemporada.objects.get(pk=int(show_id))
 	series = RelShowCol.objects.filter(temporada=this_show).latest('id')
+	now_w = None
+	conteo_w = TempConsumo.objects.filter(show=this_show,fec_fin__isnull=True).count()
+	if conteo_w > 0:
+		now_w = TempConsumo.objects.filter(show=this_show,fec_fin__isnull=True).latest('id')
 
-	return render(request,'dira-show.html',{'this_show':this_show,'series':series})
+	return render(request,'dira-show.html',{'this_show':this_show,'series':series,'now_w':now_w})
 
 def watchshow(request):
 	this_season = Season.objects.get(pk=int(request.POST.get("seasonid")))
@@ -2540,23 +2546,49 @@ def diraBunkoVolume(request,volume_id):
 	paginas = DiraBunkoSeriesPage.objects.filter(volume = this_volume,tipo__in=['summary','review']).order_by('-importancia','id')
 	wikipages = DiraBunkoSeriesPage.objects.filter(volume__series = this_volume.series).exclude(tipo__in=['summary','review']).order_by('-importancia','id')
 	
-	return render(request,'dira-bunko-volume.html',{'this_volume':this_volume,'paginas':paginas,'wikipages':wikipages})
+	now_w = None
+	conteo_w = DiraBunkoSeriesConsumo.objects.filter(volume=this_volume,fec_fin__isnull=True).count()
+	if conteo_w > 0:
+		now_w = DiraBunkoSeriesConsumo.objects.filter(volume=this_volume,fec_fin__isnull=True).latest('id')
+
+	return render(request,'dira-bunko-volume.html',{'this_volume':this_volume,'paginas':paginas,'wikipages':wikipages,'now_w':now_w})
 
 def diraReadVolume(request,volume_id):
 	this_volume = DiraBunkoSeriesVolume.objects.get(pk=int(volume_id))
 	if request.method == 'POST':
 		fecha_inicio = request.POST.get("start_date")
 		fecha_fin = request.POST.get("finish_date")
+
+		if len(fecha_fin)>=10:
+			newCon = DiraBunkoSeriesConsumo.objects.create(volume=this_volume,
+				fec_ini = fecha_inicio,
+				fec_fin=fecha_fin,
+				formato = 'kindle')
+			newCon.save()
+			this_volume.read = True
+			this_volume.save()
+		else:
+			newCon = DiraBunkoSeriesConsumo.objects.create(volume=this_volume,
+				fec_ini = fecha_inicio,
+				formato = 'kindle')
 		
-		newCon = DiraBunkoSeriesConsumo.objects.create(volume=this_volume,
-			fec_ini = fecha_inicio,
-			fec_fin=fecha_fin,
-			formato = 'kindle')
-		newCon.save()
-		this_volume.read = True
-		this_volume.save()
+		
 		return redirect(f"/dira-bunko-volume/{this_volume.id}")
 	return render(request,'dira-start-volume.html',{'this_volume':this_volume})
+
+def diraFinishVolume(request,consumo_id):
+	this_consumo = DiraBunkoSeriesConsumo.objects.get(pk=int(consumo_id))
+	this_volume = this_consumo.volume
+
+	if request.method == 'POST':
+		fecha_fin = request.POST.get("finish_date")
+		this_consumo.fec_fin = fecha_fin
+		this_consumo.save()
+		this_volume.read = True
+		
+		this_volume.save()
+		return redirect(f"/dira-bunko-volume/{this_volume.id}")
+	return render(request,'dira-finish-volume.html',{'this_volume':this_volume})
 
 def diraAddBunkoPage(request,volume_id):
 	this_volume = DiraBunkoSeriesVolume.objects.get(pk=int(volume_id))
@@ -2601,13 +2633,28 @@ def diraWatchShow(request,show_id):
 	if request.method == 'POST':
 		fecha_inicio = request.POST.get("start_date")
 		fecha_fin = request.POST.get("finish_date")
-		
-		newCon = TempConsumo.objects.create(show=this_show,
-			fec_ini = fecha_inicio,
-			fec_fin=fecha_fin)
+
+		if len(fecha_fin)>=10:	
+			newCon = TempConsumo.objects.create(show=this_show,
+				fec_ini = fecha_inicio,
+				fec_fin=fecha_fin)
+		else:
+			newCon = TempConsumo.objects.create(show=this_show,
+				fec_ini = fecha_inicio)
+
 		return redirect(f"/show/{this_show.id}")
 
 	return render(request,'dira-watch-show.html',{'this_show':this_show})
+
+def diraFinishShow(request,consumo_id):
+	this_consumo = TempConsumo.objects.get(pk=int(consumo_id))
+	if request.method == 'POST':
+		fecha_fin = request.POST.get("finish_date")
+		this_consumo.fec_fin = fecha_fin
+		this_consumo.save()
+		return redirect(f"/show/{this_consumo.show.id}")
+
+	return render(request,'dira-finish-show.html',{'this_show':this_consumo.show})
 
 def diraShowSeries(request,c_id):
 	this_series = ShowCollection.objects.get(pk=int(c_id))

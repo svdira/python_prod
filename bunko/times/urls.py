@@ -145,7 +145,8 @@ urlpatterns = [
 	path('dira-edit-bunko-page/<page_id>',views.diraEditBunkoPage,name='diraEditBunkoPage'),
 	path('dira-watch-show/<show_id>',views.diraWatchShow,name='diraWatchShow'),
 	path('dira-show-series/<c_id>',views.diraShowSeries,name='diraShowSeries'),
-	
+	path('dira-finish-show/<consumo_id>',views.diraFinishShow,name='diraFinishShow'),
+	path('dira-finish-volume/<consumo_id>',views.diraFinishVolume,name='diraFinishVolume'),
 	
 	
 

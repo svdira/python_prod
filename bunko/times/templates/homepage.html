@@ -44,14 +44,31 @@
        </div>
   {% endfor %}
   {%  endif %}
+
+
+{% if on_lnreading %}
+  {% for r in on_lnreading %}
+  <div class="col-sm-6 col-lg-6 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><a href='{% url "diraBunkoVolume" r.volume.id  %}' style="text-decoration: none;"><span style="color:grey;">[Now Reading]</span>
+          <br>{{r.volume.com_titulo}}</a></h5>
+          <p class="card-text">{{r.volume.sinopsis}}</p>
+        </div>
+      </div>
+       </div>
+  {% endfor %}
+  {%  endif %}
+ 
+
   {% if now_watching %}
   {% for r in now_watching %}
   <div class="col-sm-6 col-lg-6 mb-4">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title"><a href='{% url "show" r.temporada.show.id  %}' style="text-decoration: none;"><span style="color:grey;">[Now Watching]</span>
-          <br>{% if r.temporada.show.conteo_s == 1 %}{{r.temporada.show.title}}{%else%}{{r.temporada.titulo}}{% endif %}</a></h5>
-          <p class="card-text">{{r.temporada.headtext}}</p>
+          <h5 class="card-title"><a href='{% url "show" r.show.id  %}' style="text-decoration: none;"><span style="color:grey;">[Now Watching]</span>
+          <br>{{r.show.show_title}}</a></h5>
+          <p class="card-text">{{r.show.sinopsis}}</p>
         </div>
       </div>
        </div>
