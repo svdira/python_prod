@@ -1,0 +1,31 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}{{this_lista.titulo}}{% endblock %}
+
+{% block contenido %}
+<article>
+
+	<h4>Purchased books since Aug 2025 (${{monto}} / {{conteo}} books)</h4>
+
+
+
+
+
+	  <ul class="list-group">
+        {% for b in bps %}
+          <li class="list-group-item">
+         {% if b.libro.read == True  %}&#9989;{%else%}&#11036;{%endif%}<a href="{% url 'diraBook' b.libro.id %}" style="color:black; text-decoration: none;">&nbsp;{{b.libro.titulo}} ({{b.libro.pubyear}})</a>&nbsp;by&nbsp;{{b.libro.credit_links|safe}}<br>
+          <span style="color:grey;">${{b.precio}} | {{b.formato}} @ {{b.vendor}}</span>
+          </li>
+        {% endfor %}
+      </ul>
+
+
+</article>
+
+<br>
+
+
+
+
+{% endblock%}

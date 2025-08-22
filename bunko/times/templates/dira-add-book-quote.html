@@ -1,0 +1,25 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}Add New Page{% endblock %}
+
+{% block contenido %}
+<article>
+	<h4>Add New Quote to {{this_book.titulo}}</h4>
+
+	<form method="POST">
+	  {% csrf_token %}
+
+	  <div class="form-group">
+	    <label for="exampleFormControlTextarea1">Quote</label>
+	    <textarea name = "contenido" class="form-control" id="exampleFormControlTextarea1" rows="12"></textarea>
+	  </div>
+	  <br>
+	  <button type="submit" class="btn btn-primary">Add Quote</button>
+	</form>
+
+</article>
+
+
+
+
+{% endblock%}

@@ -6,7 +6,7 @@
 <article>
 
 <h4>{%if this_book.now_reading > 0%}&#x23F3;{%endif%}{%if this_book.consumos > 0%}&#9989;{%endif%}{{this_book.titulo}} ({{this_book.pubyear}})<br><small class="text-muted" style="font-size: 0.7em; font-weight: normal;">{{this_book.tipo|capfirst}} | {{this_book.credit_links|safe}} {% if this_book.legacy == False  %}| <a href="{% url 'diraAddLegacyBook' this_book.id %}" style="text-decoration: none; color:gray;">Legacy</a>{% endif %} | <a href="{% url 'diraEditBook' this_book.id %}" style="text-decoration: none; color:gray;">Edit</a> {%if this_book.now_reading == 0%}| <a href="{% url 'diraStartRead' this_book.id %}" style="text-decoration: none; color:gray;">Start</a>{%else%}| <a href="{% url 'diraFinishRead' this_book.id %}" style="text-decoration: none; color:gray;">Finish</a>{%endif%}
-| <a href="{% url 'diraAddBookPage' this_book.id %}" style="text-decoration: none; color:gray;">Add Page</a>
+| <a href="{% url 'diraAddBookPage' this_book.id %}" style="text-decoration: none; color:gray;">Add Page</a> | <a href="{% url 'diraAddBookQuote' this_book.id %}" style="text-decoration: none; color:gray;">Add Quote</a> | <a href="{% url 'diraAddBookPurchase' this_book.id %}" style="text-decoration: none; color:gray;">Purchase</a>
 
 </small> <br>
  </h4>
@@ -17,6 +17,16 @@
   {{this_book.mdOutput|safe}}
 
   <div style="clear:both;"></div>
+
+    {% if citas%}
+  <hr>
+  <h5>Quotes</h5>
+  <ul class="list-group">
+  {% for c in citas %}
+    <li class="list-group-item">{{c.contenido}}</li>
+  {% endfor %}
+  </ul>
+  {% endif %}
 
   {% if paginas%}
   <hr>

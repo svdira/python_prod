@@ -1140,6 +1140,24 @@ class RelShowCol(models.Model):
 	def __str__(self):
 		return self.coleccion.cname
 
+class DiraBookPurchase(models.Model):
+	libro = models.ForeignKey(DiraBook,on_delete=models.CASCADE,null=True,blank=True)
+	volumen = models.ForeignKey(DiraBunkoSeriesVolume,on_delete=models.CASCADE,null=True,blank=True)
+	formato = models.CharField(max_length=250)
+	precio = models.DecimalField(max_digits=16,decimal_places=2,default=0.00)
+	fecha = models.DateField()
+	vendor = models.CharField(max_length=300)
+
+	def __str__(self):
+		if self.libro:
+			titulo = self.libro.titulo 
+		else:
+			titulo = self.volume.volume_title
+
+		return titulo
+
+
+
 
 
 

@@ -75,6 +75,8 @@ admin.site.register(RelShowCol)
 
 admin.site.register(ShowCollection)
 
+admin.site.register(DiraBookPurchase)
+
 
 
 

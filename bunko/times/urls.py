@@ -128,6 +128,8 @@ urlpatterns = [
 	path('dira-finish-read/<book_id>',views.diraFinishRead,name='diraFinishRead'),
 	path('dira-persona/<person_id>',views.diraPersona,name='diraPersona'),
 	path('dira-add-book-page/<book_id>',views.diraAddBookPage,name='diraAddBookPage'),
+	path('dira-add-book-quote/<book_id>',views.diraAddBookQuote,name='diraAddBookQuote'),
+	path('dira-add-book-purchase/<book_id>',views.diraAddBookPurchase,name='diraAddBookPurchase'),
 	path('dira-edit-book-page/<page_id>',views.diraEditBookPage,name='diraEditBookPage'),
 	path('dira-add-book-list/',views.diraAddBookList,name='diraAddBookList'),
 	path('dira-book-lists/',views.diraBookLists,name='diraBookLists'),
@@ -147,6 +149,7 @@ urlpatterns = [
 	path('dira-show-series/<c_id>',views.diraShowSeries,name='diraShowSeries'),
 	path('dira-finish-show/<consumo_id>',views.diraFinishShow,name='diraFinishShow'),
 	path('dira-finish-volume/<consumo_id>',views.diraFinishVolume,name='diraFinishVolume'),
+	path('bookpurchases/',views.bookpurchases,name='bookpurchases'),
 	
 	
 

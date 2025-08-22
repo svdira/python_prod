@@ -27,14 +27,13 @@
 {% block rightbar %}
 <br>
 
-<h4>History ({{conteo}})</h4>
+<h4>History ({{conteo}} | {{conteo_33}})</h4>
       <ul class="list-group">
         {% for d in anhos %}
           <li class="list-group-item d-flex justify-content-between align-items-center">
           <a href="{% url 'books' d.fec_fin__year %}" style="color:black; text-decoration: none;"> {{d.fec_fin__year}} ({{d.qbooks}})</a>
           </li>
 
-          </li>
         {% endfor %}
          <li class="list-group-item d-flex justify-content-between align-items-center">
             <a href="{% url 'diraLegacy' %}" style="color:black; text-decoration: none;"> Legacy ({{legacy_count}})</a>

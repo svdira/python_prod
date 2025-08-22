@@ -135,7 +135,7 @@ def homepage(request):
 
     if int(page) > 1:
         on_reading = None
-      
+
 
     authors = Credito.objects.filter(ctype__id=1,media_type=1).exclude(persona__id__in = [36,40]).values('persona__title','persona__id').annotate(qbooks=Count('media_id')).order_by('-qbooks')
     autores = sorted(DiraOcupation.objects.filter(ocupation='author').all().order_by('persona__nombre'),key=lambda t: t.persona.nbooks, reverse=True)
@@ -242,21 +242,16 @@ def books(request,y):
 	else:
 		max_year = 0
 
-	if int(y)==1 and conteo_y > 0:
-		y = max_year.fec_fin.strftime('%Y')
-		conteo = DiraBook.objects.filter(Q(legacy=True) | Q(read=True)).count()
-		anhos = DiraConsumo.objects.filter(volume__tipo='book',fec_fin__isnull=False).values('fec_fin__year').annotate(qbooks=Count('id')).order_by('-fec_fin__year')
-		rqueue = DiraBook.objects.filter(diraconsumo__volume__isnull=True, tipo='book').order_by('pubyear')
-		rhist = DiraConsumo.objects.filter(volume__tipo='book',fec_fin__year=int(y)).order_by('-fec_fin','-id')
-	else:
-		y = 0
-		conteo = DiraBook.objects.filter(Q(legacy=True) | Q(read=True)).count()
-		anhos = None
-		rqueue = None
-		rhist = None
-	
+	y = max_year.fec_fin.strftime('%Y')
+	conteo = DiraBook.objects.filter(Q(legacy=True) | Q(read=True)).count()
+	conteo_33 = DiraBook.objects.filter(read=True).count()
+	anhos = DiraConsumo.objects.filter(volume__tipo='book',fec_fin__isnull=False).values('fec_fin__year').annotate(qbooks=Count('id')).order_by('-fec_fin__year')
+	rqueue = DiraBook.objects.filter(diraconsumo__volume__isnull=True, tipo='book').order_by('pubyear')
+	rhist = DiraConsumo.objects.filter(volume__tipo='book',fec_fin__year=int(y)).order_by('-fec_fin','-id')
 
-	return render(request,'view-history.html',{'rhist':rhist,'rqueue':rqueue,'anhos':anhos,'anho':y,'conteo':conteo,'legacy_count':legacy_count})
+
+
+	return render(request,'view-history.html',{'rhist':rhist,'rqueue':rqueue,'anhos':anhos,'anho':y,'conteo':conteo,'conteo_33':conteo_33,'legacy_count':legacy_count})
 
 def bqueue(request):
 
@@ -403,7 +398,7 @@ def addshow(request):
 			newR = RelShowCol.objects.create(coleccion=series_c,temporada=newS)
 			newR.save()
 
-	
+
 		return redirect('/show/{}'.format(newS.id))
 	else:
 		showtypes = ["show","anime"]
@@ -2248,21 +2243,21 @@ def diraAddBook(request):
 		else:
 			ix = None
 
-		
+
 
 		newB = DiraBook.objects.create(titulo = titulo,
 			pubyear = pubyear,
 			pubdate = pubdate,
-			sinopsis=binfo, 
-			idioma='TBA', 
+			sinopsis=binfo,
+			idioma='TBA',
 			tipo='book',
 			cover = ix,
 			legacy=False,
 			read = False)
 		newB.save()
 
-		newC = DiraBookCredit.objects.create(persona=author, 
-			volume = newB, 
+		newC = DiraBookCredit.objects.create(persona=author,
+			volume = newB,
 			credito = 'author')
 
 
@@ -2308,21 +2303,21 @@ def diraAddBookAuthor(request,author_id):
 		else:
 			ix = None
 
-		
+
 
 		newB = DiraBook.objects.create(titulo = titulo,
 			pubyear = pubyear,
 			pubdate = pubdate,
-			sinopsis=binfo, 
-			idioma='TBA', 
+			sinopsis=binfo,
+			idioma='TBA',
 			tipo='book',
 			cover = ix,
 			legacy=True,
 			read = False)
 		newB.save()
 
-		newC = DiraBookCredit.objects.create(persona=author, 
-			volume = newB, 
+		newC = DiraBookCredit.objects.create(persona=author,
+			volume = newB,
 			credito = 'author')
 
 
@@ -2343,8 +2338,9 @@ def diraAddBookAuthor(request,author_id):
 def diraBook(request,book_id):
 	this_book = DiraBook.objects.get(pk=int(book_id))
 	book_tags = DiraBookTag.objects.filter(volume = this_book)
-	paginas = DiraBookPage.objects.filter(volume = this_book).order_by('-importancia')
-	return render(request,'dira-book.html',{'this_book':this_book,'btags':book_tags,'paginas':paginas})
+	paginas = DiraBookPage.objects.filter(volume = this_book).exclude(tipo='quote').order_by('-importancia')
+	citas = DiraBookPage.objects.filter(volume = this_book, tipo='quote')
+	return render(request,'dira-book.html',{'this_book':this_book,'btags':book_tags,'paginas':paginas,'citas':citas})
 
 def diraEditBook(request,book_id):
 	this_book = DiraBook.objects.get(pk=int(book_id))
@@ -2433,6 +2429,45 @@ def diraAddBookPage(request,book_id):
 	return render(request,'dira-add-book-page.html',{'this_book':this_book,'wtypes':tipos})
 
 
+def diraAddBookPurchase(request,book_id):
+	this_book = DiraBook.objects.get(pk=int(book_id))
+	if request.method == 'POST':
+		formato = request.POST.get("formato","")
+		precio = request.POST.get("precio","")
+		fecha = request.POST.get("fecha","")
+		vendor = request.POST.get("vendor","")
+
+		newBP = DiraBookPurchase(libro=this_book,
+			formato = formato,
+			precio = precio,
+			fecha = fecha,
+			vendor = vendor)
+		newBP.save()
+
+		return redirect(f"/dira-book/{this_book.id}")
+
+	return render(request,'dira-add-book-purchase.html',{'this_book':this_book})
+
+
+
+
+def diraAddBookQuote(request,book_id):
+	this_book = DiraBook.objects.get(pk=int(book_id))
+	if request.method == 'POST':
+		contenido = request.POST.get("contenido","")
+		newBP = DiraBookPage(volume=this_book,
+			titulo = "quote",
+			contenido = contenido,
+			tipo = "quote",
+			importancia = 0,
+			edited_at = datetime.now())
+		newBP.save()
+
+		return redirect(f"/dira-book/{this_book.id}")
+
+	return render(request,'dira-add-book-quote.html',{'this_book':this_book})
+
+
 def diraEditBookPage(request,page_id):
 	this_page = DiraBookPage.objects.get(pk=int(page_id))
 	tipos = ["review","character","place","event","object","quote"]
@@ -2444,7 +2479,7 @@ def diraEditBookPage(request,page_id):
 
 		this_page.titulo = titulo
 		this_page.contenido = contenido
-		this_page.tipo = tipo 
+		this_page.tipo = tipo
 		this_page.importancia = importancia
 		this_page.edited_at = datetime.now()
 		this_page.save()
@@ -2545,7 +2580,7 @@ def diraBunkoVolume(request,volume_id):
 	this_volume = DiraBunkoSeriesVolume.objects.get(pk=int(volume_id))
 	paginas = DiraBunkoSeriesPage.objects.filter(volume = this_volume,tipo__in=['summary','review']).order_by('-importancia','id')
 	wikipages = DiraBunkoSeriesPage.objects.filter(volume__series = this_volume.series).exclude(tipo__in=['summary','review']).order_by('-importancia','id')
-	
+
 	now_w = None
 	conteo_w = DiraBunkoSeriesConsumo.objects.filter(volume=this_volume,fec_fin__isnull=True).count()
 	if conteo_w > 0:
@@ -2571,8 +2606,8 @@ def diraReadVolume(request,volume_id):
 			newCon = DiraBunkoSeriesConsumo.objects.create(volume=this_volume,
 				fec_ini = fecha_inicio,
 				formato = 'kindle')
-		
-		
+
+
 		return redirect(f"/dira-bunko-volume/{this_volume.id}")
 	return render(request,'dira-start-volume.html',{'this_volume':this_volume})
 
@@ -2585,7 +2620,7 @@ def diraFinishVolume(request,consumo_id):
 		this_consumo.fec_fin = fecha_fin
 		this_consumo.save()
 		this_volume.read = True
-		
+
 		this_volume.save()
 		return redirect(f"/dira-bunko-volume/{this_volume.id}")
 	return render(request,'dira-finish-volume.html',{'this_volume':this_volume})
@@ -2621,7 +2656,7 @@ def diraEditBunkoPage(request,page_id):
 
 		this_page.page_title = titulo
 		this_page.page_content = contenido
-		this_page.tipo = tipo 
+		this_page.tipo = tipo
 		this_page.importancia = importancia
 		this_page.save()
 
@@ -2634,7 +2669,7 @@ def diraWatchShow(request,show_id):
 		fecha_inicio = request.POST.get("start_date")
 		fecha_fin = request.POST.get("finish_date")
 
-		if len(fecha_fin)>=10:	
+		if len(fecha_fin)>=10:
 			newCon = TempConsumo.objects.create(show=this_show,
 				fec_ini = fecha_inicio,
 				fec_fin=fecha_fin)
@@ -2661,6 +2696,11 @@ def diraShowSeries(request,c_id):
 	this_seasons = RelShowCol.objects.filter(coleccion=this_series).order_by('temporada__show_premiere')
 	return render(request,'dira-show-series.html',{'this_series':this_series,'this_seasons':this_seasons})
 
+def bookpurchases(request):
+	book_purchases = DiraBookPurchase.objects.all().order_by('-fecha')
+	monto = DiraBookPurchase.objects.aggregate(total=Sum('precio'))['total']
+	conteo = len(book_purchases)
+	return render(request,'dira-book-purchases.html',{'bps':book_purchases,'monto':round(monto,2),'conteo':conteo})
 
 
 

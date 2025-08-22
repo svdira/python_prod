@@ -1,0 +1,47 @@
+{% extends 'base_forms.html' %}
+
+{% block titulo %}Add New Page{% endblock %}
+
+{% block contenido %}
+<article>
+	<h4>Purchase {{this_book.titulo}}</h4>
+
+	<form method="POST">
+    {% csrf_token %}
+    <div class="row">
+    <div class="form-group col-sm-3">
+      <label for="exampleFormControlInput1">Date:</label>
+      <input type = "text" name="fecha" class="form-control" id="datepicker">
+    </div>
+    <div class="form-group col-sm-3">
+      <label for="exampleFormControlInput1">Price:</label>
+      <input type = "text" name="precio" class="form-control">
+    </div>
+    <div class="form-group col-sm-3">
+      <label for="exampleFormControlSelect1">Format</label>
+      <select class="form-control" name="formato" id="exampleFormControlSelect1">
+            <option value = "Printed">Printed</option>
+            <option value = "Kindle">Kindle</option>
+            <option value = "AudioBook">AudioBook</option>
+      </select>
+    </div>
+    <div class="form-group col-sm-3">
+      <label for="exampleFormControlInput1">Vendor:</label>
+      <input type = "text" name="vendor" class="form-control" id="exampleFormControlInput1">
+    </div>
+
+  </div>
+    <br>
+
+      <button type="submit" class="btn btn-primary">Purchase</button>
+
+ 
+
+  </form>
+
+</article>
+
+
+
+
+{% endblock%}
